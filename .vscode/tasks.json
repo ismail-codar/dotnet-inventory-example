@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/dotnet-inventory-example.csproj",
+                "${workspaceFolder}/dotnet_inventory_example.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/dotnet-inventory-example.csproj",
+                "${workspaceFolder}/dotnet_inventory_example.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/dotnet-inventory-example.csproj"
+                "${workspaceFolder}/dotnet_inventory_example.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

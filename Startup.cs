@@ -61,6 +61,7 @@ namespace dotnet_inventory_example
                     var supportedCultures = new List<CultureInfo>
                         {
                             new CultureInfo("en-US"),
+                            new CultureInfo("tr-TR"),
                             /*
                             new CultureInfo("de-DE"),
                             new CultureInfo("it-IT"),
