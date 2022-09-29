@@ -12,23 +12,23 @@ using System.Linq;
 
 namespace dotnet_inventory_example.Services
 {
-    public class UnitService : IUnitService
+    public class ProductUnitervice : IProductUnitService
     {
         private readonly DbContextOptions<NorthwindDbContext> _options;
 
-        public UnitService(DbContextOptions<NorthwindDbContext> options)
+        public ProductUnitervice(DbContextOptions<NorthwindDbContext> options)
         {
             _options = options;
         }
 
-        public async Task<ItemsDTO<Units>> GetUnitsGridRowsAsync(Action<IGridColumnCollection<Units>> columns,
+        public async Task<ItemsDTO<ProductUnit>> GetProductUnitGridRowsAsync(Action<IGridColumnCollection<ProductUnit>> columns,
             QueryDictionary<StringValues> query)
         {
             using (var context = new NorthwindDbContext(_options))
             {
-                var repository = new UnitsRepository(context);
-                var server = new GridServer<Units>(repository.GetAll(), new QueryCollection(query),
-                    true, "UnitsGrid", columns)
+                var repository = new ProductUnitRepository(context);
+                var server = new GridServer<ProductUnit>(repository.GetAll(), new QueryCollection(query),
+                    true, "ProductUnitGrid", columns)
                         .Sortable()
                         .WithPaging(10)
                         .Filterable()
@@ -43,32 +43,32 @@ namespace dotnet_inventory_example.Services
             }
         }
 
-        public async Task<Units> Get(params object[] keys)
+        public async Task<ProductUnit> Get(params object[] keys)
         {
             using (var context = new NorthwindDbContext(_options))
             {
                 int UnitId;
                 int.TryParse(keys[0].ToString(), out UnitId);
-                var repository = new UnitsRepository(context);
+                var repository = new ProductUnitRepository(context);
                 return await repository.GetById(UnitId);
             }
         }
 
-        public async Task Insert(Units item)
+        public async Task Insert(ProductUnit item)
         {
             using (var context = new NorthwindDbContext(_options))
             {
-                var repository = new UnitsRepository(context);
+                var repository = new ProductUnitRepository(context);
                 await repository.Insert(item);
                 repository.Save();
             }
         }
 
-        public async Task Update(Units item)
+        public async Task Update(ProductUnit item)
         {
             using (var context = new NorthwindDbContext(_options))
             {
-                var repository = new UnitsRepository(context);
+                var repository = new ProductUnitRepository(context);
                 await repository.Update(item);
                 repository.Save();
             }
@@ -79,17 +79,17 @@ namespace dotnet_inventory_example.Services
             using (var context = new NorthwindDbContext(_options))
             {
                 var Unit = await Get(keys);
-                var repository = new UnitsRepository(context);
+                var repository = new ProductUnitRepository(context);
                 repository.Delete(Unit);
                 repository.Save();
             }
         }
 
-        public IEnumerable<SelectItem> GetAllUnits()
+        public IEnumerable<SelectItem> GetAllProductUnits()
         {
             using (var context = new NorthwindDbContext(_options))
             {
-                UnitsRepository repository = new UnitsRepository(context);
+                ProductUnitRepository repository = new ProductUnitRepository(context);
                 var list = repository.GetAll()
                     .Select(r => new SelectItem(r.UnitId + "", r.UnitName))
                     .ToList();
@@ -98,9 +98,9 @@ namespace dotnet_inventory_example.Services
         }
     }
 
-    public interface IUnitService : ICrudDataService<Units>
+    public interface IProductUnitService : ICrudDataService<ProductUnit>
     {
-        IEnumerable<SelectItem> GetAllUnits();
-        Task<ItemsDTO<Units>> GetUnitsGridRowsAsync(Action<IGridColumnCollection<Units>> columns, QueryDictionary<StringValues> query);
+        IEnumerable<SelectItem> GetAllProductUnits();
+        Task<ItemsDTO<ProductUnit>> GetProductUnitGridRowsAsync(Action<IGridColumnCollection<ProductUnit>> columns, QueryDictionary<StringValues> query);
     }
 }

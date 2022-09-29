@@ -30,6 +30,6 @@ namespace dotnet_inventory_example.Models
         // public bool IsActive { get; set; }
 
         [NotMappedColumn]
-        public virtual Units Unit { get; set; }
+        public virtual ProductUnit Unit { get; set; }
     }
 }

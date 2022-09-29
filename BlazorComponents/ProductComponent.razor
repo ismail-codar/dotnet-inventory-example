@@ -8,7 +8,7 @@
 @using System.Threading.Tasks
 
 @inject IProductService2 product2Service
-@inject IUnitService unitService
+@inject IProductUnitService productUnitService
 @inherits BaseCrud<Product2, Product2Validator>
 
 
@@ -26,20 +26,19 @@
 
         Action<IGridColumnCollection<Product2>> Product2Columns = c =>
         {
-            c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number).SetWidth(100);
-            c.Add(o => o.ProductName).Titled("ProductName").SetWidth(100);
-            c.Add(o => o.UnitPrice).Titled("UnitPrice").SetWidth(100);
-            @* c.Add(o => o.Unit).Titled("Unit").SetWidth(100); *@
+            c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number);
+            c.Add(o => o.ProductName).Titled("ProductName");
+            c.Add(o => o.UnitPrice).Titled("UnitPrice");
 
             c.Add(o => o.UnitId, true)
-            .SetSelectField(true, o => o.Unit.UnitName,
-            unitService.GetAllUnits).Titled("Unit").SetWidth(100);
+    .SetSelectField(true, o => o.Unit.UnitName,
+    productUnitService.GetAllProductUnits).Titled("Unit").SetCrudHidden(false, false, true, false);
 
             c.Add(o => o.Unit.UnitName).Titled("UnitName")
-            .SetCrudHidden(true).SetWidth(100);
+    .SetCrudHidden(true);
 
-            c.Add(o => o.UnitsInStock).Titled("UnitsInStock").SetWidth(100);
-            c.Add(o => o.Description).Titled("Description").SetWidth(100);
+            c.Add(o => o.UnitsInStock).Titled("UnitsInStock").SetCrudHidden(false, false, true, false);
+            c.Add(o => o.Description).Titled("Description");
         };
 
         var client = new GridClient<Product2>(q => product2Service.GetProduct2sGridRowsAsync(Product2Columns, q),

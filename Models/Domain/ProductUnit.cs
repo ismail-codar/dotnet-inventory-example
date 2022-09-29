@@ -3,12 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace dotnet_inventory_example.Models
 {
-    using System;
-    using System.Collections.Generic;
-
-    public partial class Units
+    public partial class ProductUnit
     {
-        public Units()
+        public ProductUnit()
         {
         }
         [Key]
