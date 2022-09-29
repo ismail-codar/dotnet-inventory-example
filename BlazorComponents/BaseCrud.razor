@@ -1,0 +1,79 @@
+@using Models.Validators
+@using dotnet_inventory_example.Models
+@using dotnet_inventory_example.Resources
+@using dotnet_inventory_example.Services
+@using Microsoft.Extensions.Primitives
+@using System.Globalization
+@using System.Threading.Tasks
+@using FluentValidation
+
+@typeparam T
+@typeparam TValidator where TValidator : new()
+
+@code
+{
+    protected CGrid<T> _grid;
+    protected GridComponent<T> _gridComponent;
+    protected bool _afterRenderExecuted = false;
+    protected Task _task;
+    protected IQueryDictionary<Type> _customFilters = new QueryDictionary<Type>();
+
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!_afterRenderExecuted && _gridComponent != null)
+        {
+            _gridComponent.BeforeInsert += BeforeInsert;
+            _gridComponent.BeforeUpdate += BeforeUpdate;
+            _gridComponent.BeforeDelete += BeforeDelete;
+            _afterRenderExecuted = true;
+        }
+    }
+
+    protected async Task<bool> BeforeInsert(GridCreateComponent<T> component, T item)
+    {
+        var validator = new TValidator() as AbstractValidator<T>;
+        var valid = await validator.ValidateAsync(item);
+
+        if (!valid.IsValid)
+        {
+            component.Error = "Insert operation returned one or more errors";
+            foreach (var error in valid.Errors)
+            {
+                component.ColumnErrors.AddParameter(error.PropertyName, error.ErrorMessage);
+            }
+        }
+
+        return valid.IsValid;
+    }
+
+    protected async Task<bool> BeforeUpdate(GridUpdateComponent<T> component, T item)
+    {
+        var validator = new TValidator() as AbstractValidator<T>;
+        var valid = await validator.ValidateAsync(item);
+
+        if (!valid.IsValid)
+        {
+            component.Error = "Update operation returned one or more errors";
+            foreach (var error in valid.Errors)
+            {
+                component.ColumnErrors.AddParameter(error.PropertyName, error.ErrorMessage);
+            }
+        }
+
+        return valid.IsValid;
+    }
+
+    protected async Task<bool> BeforeDelete(GridDeleteComponent<T> component, T item)
+    {
+        var validator = new TValidator() as AbstractValidator<T>;
+        var valid = await validator.ValidateAsync(item);
+
+        if (!valid.IsValid)
+        {
+            component.Error = valid.ToString();
+        }
+
+        return valid.IsValid;
+    }
+}

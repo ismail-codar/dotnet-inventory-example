@@ -3,137 +3,74 @@
 @using dotnet_inventory_example.Models
 @using dotnet_inventory_example.Resources
 @using dotnet_inventory_example.Services
-@using GridShared.Columns
-@using GridShared.Sorting
 @using Microsoft.Extensions.Primitives
 @using System.Globalization
 @using System.Threading.Tasks
 @inject IProductService2 product2Service
 @inject IUnitService unitService
+@inherits BaseCrud<Product2, Product2Validator>
+
 
 @if (_task.IsCompleted)
 {
-        <div class="row">
-        <div class="col-md-12">
-                <GridComponent @ref="_gridComponent" T="Product2" Grid="@_grid"></GridComponent>
-        </div>
+    <div class="row">
+    <div class="col-md-12">
+        <GridComponent @ref="_gridComponent" T="Product2" Grid="@_grid"></GridComponent>
+    </div>
 </div>
 }
 else
 {
-        <p><em>Loading...</em></p>
+    <p><em>Loading...</em></p>
 }
 
 @code
 {
-        private CGrid<Product2> _grid;
-        private GridComponent<Product2> _gridComponent;
-        private bool _afterRenderExecuted = false;
-        private Task _task;
-        private IQueryDictionary<Type> _customFilters = new QueryDictionary<Type>();
+    protected override async Task OnParametersSetAsync()
+    {
+        var locale = CultureInfo.CurrentCulture;
+        SharedResource.Culture = locale;
 
-        protected override async Task OnParametersSetAsync()
+        var query = new QueryDictionary<StringValues>();
+
+        Action<IGridColumnCollection<Product2>> Product2Columns = c =>
         {
-                var locale = CultureInfo.CurrentCulture;
-                SharedResource.Culture = locale;
+            c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number).SetWidth(100);
+            c.Add(o => o.ProductName).Titled("ProductName").SetWidth(100);
+            c.Add(o => o.UnitPrice).Titled("UnitPrice").SetWidth(100);
+            @* c.Add(o => o.Unit).Titled("Unit").SetWidth(100); *@
 
-                var query = new QueryDictionary<StringValues>();
+            c.Add(o => o.UnitId, true)
+            .SetSelectField(true, o => o.Unit.UnitName,
+            unitService.GetAllUnits).Titled("Unit").SetWidth(100);
 
-                Action<IGridColumnCollection<Product2>> Product2Columns = c =>
-                {
-                        c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number).SetWidth(100);
-                        c.Add(o => o.ProductName).Titled("ProductName").SetWidth(100);
-                        c.Add(o => o.UnitPrice).Titled("UnitPrice").SetWidth(100);
-                        @* c.Add(o => o.Unit).Titled("Unit").SetWidth(100); *@
+            c.Add(o => o.Unit.UnitName).Titled("UnitName")
+            .SetCrudHidden(true).SetWidth(100);
 
-                        c.Add(o => o.UnitId, true)
-                        .SetSelectField(true, o => o.Unit.UnitName,
-                        unitService.GetAllUnits).Titled("Unit").SetWidth(100);
+            c.Add(o => o.UnitsInStock).Titled("UnitsInStock").SetWidth(100);
+            c.Add(o => o.Description).Titled("Description").SetWidth(100);
+        };
 
-                        c.Add(o => o.Unit.UnitName).Titled("UnitName")
-                        .SetCrudHidden(true).SetWidth(100);
+        var client = new GridClient<Product2>(q => product2Service.GetProduct2sGridRowsAsync(Product2Columns, q),
+        query, false, "Product2sGrid", Product2Columns, locale)
+        .Sortable()
+        .Filterable()
+        .SetKeyboard(true)
+        .Groupable(true)
+        .ClearFiltersButton(true)
+        .SetStriped(true)
+        .WithMultipleFilters()
+        .Searchable(true, false)
+        .WithGridItemsCount()
+        .ChangePageSize(true)
+        .Crud(true, product2Service);
 
-                        c.Add(o => o.UnitsInStock).Titled("UnitsInStock").SetWidth(100);
-                        c.Add(o => o.Description).Titled("Description").SetWidth(100);
-                };
+        _grid = client.Grid;
 
-                var client = new GridClient<Product2>(q => product2Service.GetProduct2sGridRowsAsync(Product2Columns, q),
-                query, false, "Product2sGrid", Product2Columns, locale)
-                .Sortable()
-                .Filterable()
-                .SetKeyboard(true)
-                .Groupable(true)
-                .ClearFiltersButton(true)
-                .SetStriped(true)
-                .WithMultipleFilters()
-                .Searchable(true, false)
-                .WithGridItemsCount()
-                .ChangePageSize(true)
-                .Crud(true, product2Service);
+        // Set new items to grid
+        _task = client.UpdateGrid();
+        await _task;
 
-                _grid = client.Grid;
+    }
 
-                // Set new items to grid
-                _task = client.UpdateGrid();
-                await _task;
-        }
-
-        protected override void OnAfterRender(bool firstRender)
-        {
-                if (!_afterRenderExecuted && _gridComponent != null)
-                {
-                        _gridComponent.BeforeInsert += BeforeInsert;
-                        _gridComponent.BeforeUpdate += BeforeUpdate;
-                        _gridComponent.BeforeDelete += BeforeDelete;
-                        _afterRenderExecuted = true;
-                }
-        }
-
-
-        private async Task<bool> BeforeInsert(GridCreateComponent<Product2> component, Product2 item)
-        {
-                var product2Validator = new Product2Validator();
-                var valid = await product2Validator.ValidateAsync(item);
-
-                if (!valid.IsValid)
-                {
-                        component.Error = "Insert operation returned one or more errors";
-                        foreach (var error in valid.Errors)
-                        {
-                                component.ColumnErrors.AddParameter(error.PropertyName, error.ErrorMessage);
-                        }
-                }
-
-                return valid.IsValid;
-        }
-
-        private async Task<bool> BeforeUpdate(GridUpdateComponent<Product2> component, Product2 item)
-        {
-                var product2Validator = new Product2Validator();
-                var valid = await product2Validator.ValidateAsync(item);
-
-                if (!valid.IsValid)
-                {
-                        component.Error = "Update operation returned one or more errors";
-                        foreach (var error in valid.Errors)
-                        {
-                                component.ColumnErrors.AddParameter(error.PropertyName, error.ErrorMessage);
-                        }
-                }
-
-                return valid.IsValid;
-        }
-
-        private async Task<bool> BeforeDelete(GridDeleteComponent<Product2> component, Product2 item)
-        {
-                var product2Validator = new Product2Validator();
-                var valid = await product2Validator.ValidateAsync(item);
-
-                if (!valid.IsValid)
-                {
-                        component.Error = valid.ToString();
-                }
-
-                return valid.IsValid;
-        }
 }
