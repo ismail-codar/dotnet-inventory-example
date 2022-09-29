@@ -55,7 +55,7 @@ namespace dotnet_inventory_example
             services.AddScoped<IEmployeeFileService, EmployeeFileService>();
             services.AddScoped<IShipperService, ShipperService>();
             services.AddScoped<IProductService2, Product2Service>();
-            services.AddScoped<IProductUnitService, ProductUnitervice>();
+            services.AddScoped<IProductUnitService, ProductUnitService>();
 
             services.Configure<RequestLocalizationOptions>(
                 options =>

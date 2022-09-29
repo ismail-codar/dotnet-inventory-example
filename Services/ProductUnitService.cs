@@ -12,11 +12,11 @@ using System.Linq;
 
 namespace dotnet_inventory_example.Services
 {
-    public class ProductUnitervice : IProductUnitService
+    public class ProductUnitService : IProductUnitService
     {
         private readonly DbContextOptions<NorthwindDbContext> _options;
 
-        public ProductUnitervice(DbContextOptions<NorthwindDbContext> options)
+        public ProductUnitService(DbContextOptions<NorthwindDbContext> options)
         {
             _options = options;
         }
