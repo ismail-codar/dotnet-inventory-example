@@ -6,23 +6,14 @@
 @using Microsoft.Extensions.Primitives
 @using System.Globalization
 @using System.Threading.Tasks
+
 @inject IProductService2 product2Service
 @inject IUnitService unitService
 @inherits BaseCrud<Product2, Product2Validator>
 
 
-@if (_task.IsCompleted)
-{
-    <div class="row">
-    <div class="col-md-12">
-        <GridComponent @ref="_gridComponent" T="Product2" Grid="@_grid"></GridComponent>
-    </div>
-</div>
-}
-else
-{
-    <p><em>Loading...</em></p>
-}
+@RenderGridUI()
+
 
 @code
 {

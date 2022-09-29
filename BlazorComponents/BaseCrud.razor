@@ -10,6 +10,29 @@
 @typeparam T
 @typeparam TValidator where TValidator : new()
 
+@code {
+    public RenderFragment RenderGridUI()
+    {
+        if (_task.IsCompleted)
+        {
+            return (
+    @<div class="row">
+        <div class="col-md-12">
+            <GridComponent @ref="_gridComponent" T="T" Grid="@_grid"></GridComponent>
+        </div>
+    </div>
+    );
+        }
+        else
+        {
+            return (
+    @<p><em>Loading...</em></p>
+    );
+        }
+    }
+
+}
+
 @code
 {
     protected CGrid<T> _grid;
