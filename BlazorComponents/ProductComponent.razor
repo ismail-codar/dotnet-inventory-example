@@ -1,0 +1,66 @@
+﻿@using GridBlazor.Resources
+@using dotnet_inventory_example.Models
+@using dotnet_inventory_example.Resources
+@using dotnet_inventory_example.Services
+@using GridShared.Columns
+@using GridShared.Sorting
+@using Microsoft.Extensions.Primitives
+@using System.Globalization
+@using System.Threading.Tasks
+@inject IProductService2 product2Service
+
+@if (_task.IsCompleted)
+{
+        <div class="row">
+        <div class="col-md-12">
+                <GridComponent T="Product2" Grid="@_grid"></GridComponent>
+        </div>
+</div>
+}
+else
+{
+        <p><em>Loading...</em></p>
+}
+
+@code
+{
+        private CGrid<Product2> _grid;
+        private Task _task;
+        private IQueryDictionary<Type> _customFilters = new QueryDictionary<Type>();
+
+        protected override async Task OnParametersSetAsync()
+        {
+                var locale = CultureInfo.CurrentCulture;
+                SharedResource.Culture = locale;
+
+                var query = new QueryDictionary<StringValues>();
+
+                Action<IGridColumnCollection<Product2>> Product2Columns = c =>
+                {
+                        c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number).SetWidth(100).Sum(true);
+                };
+
+                var client = new GridClient<Product2>(q => product2Service.GetProduct2sGridRowsAsync(Product2Columns, q),
+                query, false, "Product2sGrid", Product2Columns, locale)
+                .Sortable()
+                .Filterable()
+                .SetKeyboard(true)
+                .Groupable(true)
+                .ClearFiltersButton(true)
+                .SetStriped(true)
+                .WithMultipleFilters()
+                .Searchable(true, false)
+                .WithGridItemsCount()
+                .ChangePageSize(true)
+                .Crud(true, product2Service)
+                .SetCreateConfirmation(true)
+                .SetUpdateConfirmation(true)
+                .SetDeleteConfirmation(true);
+
+                _grid = client.Grid;
+
+                // Set new items to grid
+                _task = client.UpdateGrid();
+                await _task;
+        }
+}

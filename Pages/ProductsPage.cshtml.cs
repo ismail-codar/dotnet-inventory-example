@@ -3,6 +3,7 @@ using GridCore;
 using dotnet_inventory_example.Components;
 using dotnet_inventory_example.Models;
 using dotnet_inventory_example.Resources;
+using dotnet_inventory_example.Services;
 using GridMvc.Server;
 using GridShared;
 using GridShared.Filtering;
@@ -14,17 +15,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
+using GridBlazor;
 
 namespace dotnet_inventory_example.Pages
 {
     public class ProductsPageModel : PageModel
     {
         private readonly ProductsRepository2 _productRepository2;
+        private readonly Product2Service _product2Service;
 
         public ProductsPageModel(NorthwindDbContext context)
         {
             _productRepository2 = new ProductsRepository2(context);
+            _product2Service = new Product2Service(new DbContextOptions<NorthwindDbContext>());
         }
 
         public ISGrid<Product2> Grid { get; set; }
