@@ -63,10 +63,7 @@ else
                 .Searchable(true, false)
                 .WithGridItemsCount()
                 .ChangePageSize(true)
-                .Crud(true, product2Service)
-                .SetCreateConfirmation(true)
-                .SetUpdateConfirmation(true)
-                .SetDeleteConfirmation(true);
+                .Crud(true, product2Service);
 
                 _grid = client.Grid;
 

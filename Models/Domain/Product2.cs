@@ -13,6 +13,7 @@ namespace dotnet_inventory_example.Models
 {
     using System;
     using System.Collections.Generic;
+    using GridShared.DataAnnotations;
 
     public partial class Product2
     {
@@ -23,10 +24,11 @@ namespace dotnet_inventory_example.Models
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public Nullable<decimal> UnitPrice { get; set; }
-        public Nullable<short> UnitsInStock { get; set; }
+        public Nullable<int> UnitsInStock { get; set; }
         public string Description { get; set; }
         // public bool IsActive { get; set; }
 
+        [NotMappedColumn]
         public virtual Units Unit { get; set; }
     }
 }

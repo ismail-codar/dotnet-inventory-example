@@ -14,5 +14,8 @@ namespace dotnet_inventory_example.Models
         [Key]
         public int UnitId { get; set; }
         public string UnitName { get; set; }
+
+        public virtual ICollection<Product2> Products { get; set; }
+
     }
 }
