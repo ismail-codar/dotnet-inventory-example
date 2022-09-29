@@ -1,4 +1,5 @@
 ﻿@using GridBlazor.Resources
+@using Models.Validators
 @using dotnet_inventory_example.Models
 @using dotnet_inventory_example.Resources
 @using dotnet_inventory_example.Services
@@ -14,7 +15,7 @@
 {
         <div class="row">
         <div class="col-md-12">
-                <GridComponent T="Product2" Grid="@_grid"></GridComponent>
+                <GridComponent @ref="_gridComponent" T="Product2" Grid="@_grid"></GridComponent>
         </div>
 </div>
 }
@@ -26,6 +27,8 @@ else
 @code
 {
         private CGrid<Product2> _grid;
+        private GridComponent<Product2> _gridComponent;
+        private bool _afterRenderExecuted = false;
         private Task _task;
         private IQueryDictionary<Type> _customFilters = new QueryDictionary<Type>();
 
@@ -73,5 +76,64 @@ else
                 // Set new items to grid
                 _task = client.UpdateGrid();
                 await _task;
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+                if (!_afterRenderExecuted && _gridComponent != null)
+                {
+                        _gridComponent.BeforeInsert += BeforeInsert;
+                        _gridComponent.BeforeUpdate += BeforeUpdate;
+                        _gridComponent.BeforeDelete += BeforeDelete;
+                        _afterRenderExecuted = true;
+                }
+        }
+
+
+        private async Task<bool> BeforeInsert(GridCreateComponent<Product2> component, Product2 item)
+        {
+                var product2Validator = new Product2Validator();
+                var valid = await product2Validator.ValidateAsync(item);
+
+                if (!valid.IsValid)
+                {
+                        component.Error = "Insert operation returned one or more errors";
+                        foreach (var error in valid.Errors)
+                        {
+                                component.ColumnErrors.AddParameter(error.PropertyName, error.ErrorMessage);
+                        }
+                }
+
+                return valid.IsValid;
+        }
+
+        private async Task<bool> BeforeUpdate(GridUpdateComponent<Product2> component, Product2 item)
+        {
+                var product2Validator = new Product2Validator();
+                var valid = await product2Validator.ValidateAsync(item);
+
+                if (!valid.IsValid)
+                {
+                        component.Error = "Update operation returned one or more errors";
+                        foreach (var error in valid.Errors)
+                        {
+                                component.ColumnErrors.AddParameter(error.PropertyName, error.ErrorMessage);
+                        }
+                }
+
+                return valid.IsValid;
+        }
+
+        private async Task<bool> BeforeDelete(GridDeleteComponent<Product2> component, Product2 item)
+        {
+                var product2Validator = new Product2Validator();
+                var valid = await product2Validator.ValidateAsync(item);
+
+                if (!valid.IsValid)
+                {
+                        component.Error = valid.ToString();
+                }
+
+                return valid.IsValid;
         }
 }
