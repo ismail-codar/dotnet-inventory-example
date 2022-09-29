@@ -20,16 +20,14 @@ namespace dotnet_inventory_example.Pages
 {
     public class ProductsPageModel : PageModel
     {
-        private readonly OrdersRepository _orderRepository;
-        private readonly ShippersRepository _shippersRepository;
+        private readonly ProductsRepository2 _productRepository2;
 
         public ProductsPageModel(NorthwindDbContext context)
         {
-            _orderRepository = new OrdersRepository(context);
-            _shippersRepository = new ShippersRepository(context);
+            _productRepository2 = new ProductsRepository2(context);
         }
 
-        public ISGrid<Order> Grid { get; set; }
+        public ISGrid<Product2> Grid { get; set; }
 
         public IActionResult OnGet(string gridState = "")
         {
@@ -52,11 +50,7 @@ namespace dotnet_inventory_example.Pages
             var locale = requestCulture.RequestCulture.UICulture.TwoLetterISOLanguageName;
             SharedResource.Culture = requestCulture.RequestCulture.UICulture;
 
-            var shipperList = _shippersRepository.GetAll()
-                .Select(s => new SelectItem(s.ShipperID.ToString(), s.CompanyName))
-                .ToList();
-
-            Action<IGridColumnCollection<Order>> columns = c =>
+            Action<IGridColumnCollection<Product2>> columns = c =>
             {
                 /* Adding not mapped column, that renders body, using inline Razor html helper */
                 c.Add()
@@ -66,66 +60,28 @@ namespace dotnet_inventory_example.Pages
                     .Css("hidden-xs") //hide on phones
                     .RenderComponentAs<ButtonCellViewComponent>(returnUrl);
 
-                /* Adding "OrderID" column: */
+                /* Adding "Product2ID" column: */
 
-                c.Add(o => o.OrderID)
+                c.Add(o => o.ProductId)
                     .Titled(SharedResource.Number)
                     .SetWidth(100)
                     .Sum(true);
 
-                /* Adding "OrderDate" column: */
-                c.Add(o => o.OrderDate, "OrderCustomDate")
-                    .Titled(SharedResource.OrderCustomDate)
-                    .SortInitialDirection(GridSortDirection.Descending)
-                    .ThenSortByDescending(o => o.OrderID)
-                    .SetCellCssClassesContraint(o => o.OrderDate.HasValue && o.OrderDate.Value >= DateTime.Parse("1997-01-01") ? "red" : "")
-                    .Format("{0:yyyy-MM-dd}")
-                    .SetWidth(110)
-                    .Max(true).Min(true);
 
-                c.Add(o => o.ShipVia)
-                    .Titled("Via")
-                    .SetWidth(250)
-                    .RenderValueAs(o => o.Shipper?.CompanyName)
-                    .SetListFilter(shipperList);
+                /* Adding "UnitName" column: */
+                // c.Add(o => o.Unit.UnitName)
+                //     .Titled(SharedResource.CompanyName)
+                //     .ThenSortByDescending(o => o.Unit)
+                //     .SetWidth(250)
+                //     .SetInitialFilter(GridFilterType.StartsWith, "a")
+                //     .SetFilterWidgetType("CustomCompanyNameFilterWidget")
+                //     .Max(true).Min(true);
 
-                /* Adding "CompanyName" column: */
-                c.Add(o => o.Customer.CompanyName)
-                    .Titled(SharedResource.CompanyName)
-                    .ThenSortByDescending(o => o.ShipVia)
-                    .ThenSortByDescending(o => o.Freight)
-                    .SetWidth(250)
-                    .SetInitialFilter(GridFilterType.StartsWith, "a")
-                    .SetFilterWidgetType("CustomCompanyNameFilterWidget")
-                    .Max(true).Min(true);
-
-                /* Adding "ContactName" column: */
-                c.Add(o => o.Customer.ContactName).Titled(SharedResource.ContactName).SetWidth(250)
-                    .Max(true).Min(true);
-
-                /* Adding "Customer.Country" hidden column: */
-                c.Add(o => o.Customer.Country, true);
-
-                /* Adding "Freight" column: */
-                c.Add(o => o.Freight)
-                    .Titled(SharedResource.Freight)
-                    .SetWidth(100)
-                    .Format("{0:F}")
-                    .Sum(true).Average(true).Max(true).Min(true)
-                    .Calculate("Average 2", x => x.Get("Freight").SumValue.Number / x.Grid.ItemsCount)
-                    .Calculate("Average 3", x => x.Get("Freight").SumValue.Number / x.Get("OrderID").SumValue.Number);
-
-                /* Adding "Vip customer" column: */
-                c.Add(o => o.Customer.IsVip)
-                    .Titled(SharedResource.IsVip)
-                    .SetWidth(80)
-                    .Css("hidden-xs") //hide on phones
-                    .RenderValueAs(o => o.Customer.IsVip ? Strings.BoolTrueLabel : Strings.BoolFalseLabel);
             };
 
-            var server = new GridServer<Order>(_orderRepository.GetAll(), query, false, "ordersGrid",
+            var server = new GridServer<Product2>(_productRepository2.GetAll(), query, false, "Product2sGrid",
                 columns, 10, locale)
-                .SetRowCssClasses(item => item.Customer.IsVip ? "success" : string.Empty)
+                // .SetRowCssClasses(item => item.Customer.IsVip ? "success" : string.Empty)
                 .Sortable()
                 .Filterable()
                 .WithMultipleFilters()

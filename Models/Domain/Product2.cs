@@ -20,7 +20,7 @@ namespace dotnet_inventory_example.Models
         {
         }
         [Key]
-        public int ProductID { get; set; }
+        public int ProductId { get; set; }
         public string ProductName { get; set; }
         public Nullable<decimal> UnitPrice { get; set; }
         public Nullable<short> UnitsInStock { get; set; }

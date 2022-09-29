@@ -12,7 +12,7 @@ namespace dotnet_inventory_example.Models
         {
         }
         [Key]
-        public int UnitID { get; set; }
+        public int UnitId { get; set; }
         public string UnitName { get; set; }
     }
 }
