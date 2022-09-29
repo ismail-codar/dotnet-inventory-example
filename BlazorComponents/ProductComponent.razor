@@ -38,6 +38,10 @@ else
                 Action<IGridColumnCollection<Product2>> Product2Columns = c =>
                 {
                         c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number).SetWidth(100).Sum(true);
+                        c.Add(o => o.ProductName).SetPrimaryKey(true).Titled("ProductName").SetWidth(100).Sum(true);
+                        c.Add(o => o.UnitPrice).SetPrimaryKey(true).Titled("UnitPrice").SetWidth(100).Sum(true);
+                        c.Add(o => o.UnitsInStock).SetPrimaryKey(true).Titled("UnitsInStock").SetWidth(100).Sum(true);
+                        c.Add(o => o.Description).SetPrimaryKey(true).Titled("Description").SetWidth(100).Sum(true);
                 };
 
                 var client = new GridClient<Product2>(q => product2Service.GetProduct2sGridRowsAsync(Product2Columns, q),
