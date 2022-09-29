@@ -8,6 +8,7 @@
 @using System.Globalization
 @using System.Threading.Tasks
 @inject IProductService2 product2Service
+@inject IUnitService unitService
 
 @if (_task.IsCompleted)
 {
@@ -37,11 +38,17 @@ else
 
                 Action<IGridColumnCollection<Product2>> Product2Columns = c =>
                 {
-                        c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number).SetWidth(100).Sum(true);
-                        c.Add(o => o.ProductName).SetPrimaryKey(true).Titled("ProductName").SetWidth(100).Sum(true);
-                        c.Add(o => o.UnitPrice).SetPrimaryKey(true).Titled("UnitPrice").SetWidth(100).Sum(true);
-                        c.Add(o => o.UnitsInStock).SetPrimaryKey(true).Titled("UnitsInStock").SetWidth(100).Sum(true);
-                        c.Add(o => o.Description).SetPrimaryKey(true).Titled("Description").SetWidth(100).Sum(true);
+                        c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number).SetWidth(100);
+                        c.Add(o => o.ProductName).Titled("ProductName").SetWidth(100);
+                        c.Add(o => o.UnitPrice).Titled("UnitPrice").SetWidth(100);
+                        @* c.Add(o => o.Unit).Titled("Unit").SetWidth(100); *@
+
+                        c.Add(o => o.Unit, true)
+                        .SetSelectField(true, o => o.Unit.UnitName,
+                        unitService.GetAllUnits).Titled("Unit").SetWidth(100); ;
+
+                        c.Add(o => o.UnitsInStock).Titled("UnitsInStock").SetWidth(100);
+                        c.Add(o => o.Description).Titled("Description").SetWidth(100);
                 };
 
                 var client = new GridClient<Product2>(q => product2Service.GetProduct2sGridRowsAsync(Product2Columns, q),

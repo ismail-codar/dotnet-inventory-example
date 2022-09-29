@@ -13,7 +13,7 @@ namespace dotnet_inventory_example.Models
 
         public override IQueryable<Product2> GetAll()
         {
-            return EfDbSet.Include("Unit");
+            return EfDbSet.Include("Units");
         }
 
         public override async Task<Product2> GetById(object id)
