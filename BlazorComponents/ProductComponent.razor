@@ -44,7 +44,7 @@ else
                         @* c.Add(o => o.Unit).Titled("Unit").SetWidth(100); *@
 
                         c.Add(o => o.Unit, true)
-                        .SetSelectField(true, o => o.Unit.UnitName,
+                        .SetSelectField(true, o => o.Unit?.UnitName,
                         unitService.GetAllUnits).Titled("Unit").SetWidth(100); ;
 
                         c.Add(o => o.UnitsInStock).Titled("UnitsInStock").SetWidth(100);
