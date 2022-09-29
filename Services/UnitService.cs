@@ -90,9 +90,10 @@ namespace dotnet_inventory_example.Services
             using (var context = new NorthwindDbContext(_options))
             {
                 UnitsRepository repository = new UnitsRepository(context);
-                return repository.GetAll()
+                var list = repository.GetAll()
                     .Select(r => new SelectItem(r.UnitId + "", r.UnitName))
                     .ToList();
+                return list;
             }
         }
     }

@@ -43,9 +43,10 @@ else
                         c.Add(o => o.UnitPrice).Titled("UnitPrice").SetWidth(100);
                         @* c.Add(o => o.Unit).Titled("Unit").SetWidth(100); *@
 
-                        c.Add(o => o.Unit, true)
+                        c.Add(o => o.UnitId, true)
                         .SetSelectField(true, o => o.Unit.UnitName,
-                        unitService.GetAllUnits).Titled("Unit").SetWidth(100); ;
+                        unitService.GetAllUnits).Titled("Unit").SetWidth(100);
+
                         c.Add(o => o.Unit.UnitName).Titled("UnitName")
                         .SetCrudHidden(true).SetWidth(100);
 
