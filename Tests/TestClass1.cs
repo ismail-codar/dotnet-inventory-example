@@ -9,10 +9,11 @@ using NLog;
 
 namespace dotnet_inventory_example.Tests
 {
-
     [TestClass]
     public class TestClass1
     {
+        WorOrderScenario worOrderScenario;
+
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private NorthwindDbContext context;
@@ -23,30 +24,22 @@ namespace dotnet_inventory_example.Tests
             var builder = new DbContextOptionsBuilder<NorthwindDbContext>();
             string connectionString = "Server=localhost;Database=Northwind;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=codaricodar!%2300CODARyekbas";
             builder.UseSqlServer(connectionString);
-            using (var context = new NorthwindDbContext(builder.Options))
-            {
-                CustomersRepository repository = new CustomersRepository(context);
-                var list = repository.GetAll()
-                    .Select(r => new SelectItem(r.CustomerID, r.CustomerID + " - " + r.CompanyName))
-                    .ToList();
-                Console.WriteLine(list.Count);
-            }
-
-
-            Log.Debug("test");
+            this.context = new NorthwindDbContext(builder.Options);
+            this.worOrderScenario = new WorOrderScenario(this.context);
         }
 
         [TestMethod]
         public void Pass()
         {
-            (1 + 1).ShouldBe(2);
+            // İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi
+            worOrderScenario.InsertSourceRoomNull();
         }
 
 
         [TestCleanup]
         public void Close()
         {
-            Log.Debug("close");
+            this.context.Dispose();
         }
     }
 }
