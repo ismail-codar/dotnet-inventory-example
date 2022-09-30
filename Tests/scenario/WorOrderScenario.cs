@@ -6,23 +6,34 @@ using Shouldly;
 using System.Linq;
 using GridShared;
 using NLog;
+using dotnet_inventory_example.Services;
+using System.Threading.Tasks;
 
 internal class WorOrderScenario
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    DbContextOptions<NorthwindDbContext> options;
 
-    private NorthwindDbContext context;
-
-    public WorOrderScenario(NorthwindDbContext context)
+    public WorOrderScenario(DbContextOptions<NorthwindDbContext> options)
     {
-        this.context = context;
+        this.options = options;
     }
-    internal void InsertSourceRoomNull()
+    internal async Task InsertSourceRoomNullAsync()
     {
-        CustomersRepository repository = new CustomersRepository(context);
-        var list = repository.GetAll()
-            .Select(r => new SelectItem(r.CustomerID, r.CustomerID + " - " + r.CompanyName))
-            .ToList();
-        Console.WriteLine(list.Count);
+        // CustomersRepository repository = new CustomersRepository(context);
+        // var list = repository.GetAll()
+        //     .Select(r => new SelectItem(r.CustomerID, r.CustomerID + " - " + r.CompanyName))
+        //     .ToList();
+        // Console.WriteLine(list.Count);
+
+        WorkOrderService workOrderService = new WorkOrderService(this.options);
+        await workOrderService.Insert(new WorkOrder()
+        {
+            Date = DateTime.Now,
+            WorkOrderId = 0,
+            ProductId = 0,
+            SourceRoomId = null,
+            TargetRoomId = 0
+        });
     }
 }

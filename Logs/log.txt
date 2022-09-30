@@ -2,3 +2,7 @@
 2022-09-30 19:04:54.3416|DEBUG|dotnet_inventory_example.Tests.TestClass1|close
 2022-09-30 19:06:09.5387|DEBUG|dotnet_inventory_example.Tests.TestClass1|test
 2022-09-30 19:06:14.6647|DEBUG|dotnet_inventory_example.Tests.TestClass1|close
+2022-09-30 20:54:05.9066|DEBUG|dotnet_inventory_example.Tests.TestClass1|İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi
+2022-09-30 20:56:04.0460|DEBUG|dotnet_inventory_example.Tests.TestClass1|İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi
+2022-09-30 21:00:09.0730|DEBUG|dotnet_inventory_example.Tests.TestClass1|İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi
+2022-09-30 21:00:53.6561|DEBUG|dotnet_inventory_example.Tests.TestClass1|İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi

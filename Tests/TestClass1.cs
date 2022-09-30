@@ -6,6 +6,7 @@ using Shouldly;
 using System.Linq;
 using GridShared;
 using NLog;
+using System.Threading.Tasks;
 
 namespace dotnet_inventory_example.Tests
 {
@@ -16,7 +17,6 @@ namespace dotnet_inventory_example.Tests
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private NorthwindDbContext context;
 
         [TestInitialize]
         public void Setup()
@@ -24,22 +24,15 @@ namespace dotnet_inventory_example.Tests
             var builder = new DbContextOptionsBuilder<NorthwindDbContext>();
             string connectionString = "Server=localhost;Database=Northwind;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=codaricodar!%2300CODARyekbas";
             builder.UseSqlServer(connectionString);
-            this.context = new NorthwindDbContext(builder.Options);
-            this.worOrderScenario = new WorOrderScenario(this.context);
+            this.worOrderScenario = new WorOrderScenario(builder.Options);
         }
 
         [TestMethod]
-        public void Pass()
+        public async Task PassAsync()
         {
-            // İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi
-            worOrderScenario.InsertSourceRoomNull();
+            Log.Debug("İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi");
+            await worOrderScenario.InsertSourceRoomNullAsync();
         }
 
-
-        [TestCleanup]
-        public void Close()
-        {
-            this.context.Dispose();
-        }
     }
 }
