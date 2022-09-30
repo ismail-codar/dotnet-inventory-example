@@ -50,7 +50,7 @@ namespace dotnet_inventory_example.Models
         public DbSet<Territory> Territories { get; set; }
 
         public DbSet<Product2> Products2 { get; set; }
-        public DbSet<ProductUnit> ProductUnits { get; set; }
+        public DbSet<ProductUnit> ProductUnit { get; set; }
         public DbSet<ProductStock> ProductStocks { get; set; }
         public DbSet<StockBuilding> StockBuildings { get; set; }
         public DbSet<StockRoom> StockRooms { get; set; }

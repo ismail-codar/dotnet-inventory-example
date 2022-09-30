@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace dotnet_inventory_example.Models
 {
-    public class ProductUnitRepository : SqlRepository<ProductUnit>, IProductUnitsRepository
+    public class ProductUnitRepository : SqlRepository<ProductUnit>, IProductUnitRepository
     {
         public ProductUnitRepository(NorthwindDbContext context)
             : base(context)
@@ -54,7 +54,7 @@ namespace dotnet_inventory_example.Models
         }
     }
 
-    public interface IProductUnitsRepository
+    public interface IProductUnitRepository
     {
         Task Insert(ProductUnit ProductUnit);
         Task Update(ProductUnit ProductUnit);

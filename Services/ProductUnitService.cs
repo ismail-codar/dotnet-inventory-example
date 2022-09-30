@@ -85,7 +85,7 @@ namespace dotnet_inventory_example.Services
             }
         }
 
-        public IEnumerable<SelectItem> GetAllProductUnits()
+        public IEnumerable<SelectItem> GetAllProductUnit()
         {
             using (var context = new NorthwindDbContext(_options))
             {
@@ -100,7 +100,7 @@ namespace dotnet_inventory_example.Services
 
     public interface IProductUnitService : ICrudDataService<ProductUnit>
     {
-        IEnumerable<SelectItem> GetAllProductUnits();
+        IEnumerable<SelectItem> GetAllProductUnit();
         Task<ItemsDTO<ProductUnit>> GetProductUnitGridRowsAsync(Action<IGridColumnCollection<ProductUnit>> columns, QueryDictionary<StringValues> query);
     }
 }
