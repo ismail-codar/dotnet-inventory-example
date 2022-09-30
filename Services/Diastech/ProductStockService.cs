@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace dotnet_inventory_example.Services
 {
@@ -82,10 +83,21 @@ namespace dotnet_inventory_example.Services
                 repository.Save();
             }
         }
+
+        public ProductStock GetProductStockInRoom(int productId, int targetRoomId)
+        {
+            using (var context = new NorthwindDbContext(_options))
+            {
+                var repository = new ProductStockRepository(context);
+                var list = repository.GetAll().Where(r => r.ProductId == productId && r.StockRoomId == targetRoomId).ToList();
+                return list.Count > 0 ? list[0] : null;
+            }
+        }
     }
 
     public interface IProductStockService : ICrudDataService<ProductStock>
     {
+        ProductStock GetProductStockInRoom(int productId, int targetRoomId);
         Task<ItemsDTO<ProductStock>> GetsGridRowsAsync(Action<IGridColumnCollection<ProductStock>> columns, QueryDictionary<StringValues> query);
     }
 }
