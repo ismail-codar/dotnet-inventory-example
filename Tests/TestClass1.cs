@@ -1,13 +1,26 @@
 using System;
+using dotnet_inventory_example.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 
 namespace dotnet_inventory_example.Tests
-{ // Curly bracket on same line as namespace for testing namespace parsing
-
+{
     [TestClass]
     public class TestClass1
     {
+
+        private NorthwindDbContext context;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            var builder = new DbContextOptionsBuilder<NorthwindDbContext>();
+            builder.UseSqlite();
+            context = new NorthwindDbContext(builder.Options);
+            Console.WriteLine("test");
+        }
+
         [TestMethod]
         public void Pass()
         {
