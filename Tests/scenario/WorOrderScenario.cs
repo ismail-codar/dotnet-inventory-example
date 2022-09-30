@@ -20,12 +20,6 @@ internal class WorOrderScenario
     }
     internal async Task E2ETest()
     {
-        // CustomersRepository repository = new CustomersRepository(context);
-        // var list = repository.GetAll()
-        //     .Select(r => new SelectItem(r.CustomerID, r.CustomerID + " - " + r.CompanyName))
-        //     .ToList();
-        // Console.WriteLine(list.Count);
-
         IProductService2 productService = new Product2Service(this.options);
         IProductUnitService productUnitService = new ProductUnitService(this.options);
         IStockBuildingService stockBuildingService = new StockBuildingService(this.options);
@@ -59,24 +53,30 @@ internal class WorOrderScenario
         await stockBuildingService.Insert(stockBuilding);
 
 
-        Log.Debug("Stock room oluştur");
-        var stockRoom = new StockRoom()
+        Log.Debug("Stock room1 oluştur");
+        var stockRoom1 = new StockRoom()
         {
             StockBuildingId = stockBuilding.StockBuildingId,
             RoomName = "Oda 1"
         };
-        await stockRoomService.Insert(stockRoom);
+        await stockRoomService.Insert(stockRoom1);
+
+        Log.Debug("Stock room2 oluştur");
+        var stockRoom2 = new StockRoom()
+        {
+            StockBuildingId = stockBuilding.StockBuildingId,
+            RoomName = "Oda 2"
+        };
+        await stockRoomService.Insert(stockRoom2);
 
         // TODO workOrder & productStock
-
-        // WorkOrderService workOrderService = new WorkOrderService(this.options);
-        // await workOrderService.Insert(new WorkOrder()
-        // {
-        //     Date = DateTime.Now,
-        //     WorkOrderId = 0,
-        //     ProductId = 0,
-        //     SourceRoomId = null,
-        //     TargetRoomId = 0
-        // });
+        Log.Debug("İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi");
+        await workOrderService.Insert(new WorkOrder()
+        {
+            Date = DateTime.Now,
+            ProductId = product.ProductId,
+            SourceRoomId = null,
+            TargetRoomId = stockRoom1.StockRoomId
+        });
     }
 }

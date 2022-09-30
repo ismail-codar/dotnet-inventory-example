@@ -30,7 +30,6 @@ namespace dotnet_inventory_example.Tests
         [TestMethod]
         public async Task PassAsync()
         {
-            Log.Debug("İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi");
             await worOrderScenario.E2ETest();
         }
 
