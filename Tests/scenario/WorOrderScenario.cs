@@ -18,7 +18,7 @@ internal class WorOrderScenario
     {
         this.options = options;
     }
-    internal async Task InsertSourceRoomNullAsync()
+    internal async Task E2ETest()
     {
         // CustomersRepository repository = new CustomersRepository(context);
         // var list = repository.GetAll()

@@ -31,7 +31,7 @@ namespace dotnet_inventory_example.Tests
         public async Task PassAsync()
         {
             Log.Debug("İçerdeki kaynak depo olmadan doğrudan dışarıdan depoya mal girişi");
-            await worOrderScenario.InsertSourceRoomNullAsync();
+            await worOrderScenario.E2ETest();
         }
 
     }
