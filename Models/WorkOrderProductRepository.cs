@@ -28,7 +28,7 @@ namespace dotnet_inventory_example.Models
 
         public async Task Update(WorkOrderProduct WorkOrderProduct)
         {
-            throw new System.NotImplementedException("GetById");
+            throw new System.NotImplementedException("Update");
         }
 
         public void Delete(WorkOrderProduct WorkOrderProduct)

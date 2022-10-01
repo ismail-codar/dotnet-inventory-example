@@ -26,6 +26,7 @@ internal class WorOrderScenario
         IStockBuildingService stockBuildingService = new StockBuildingService(this.options);
         IStockRoomService stockRoomService = new StockRoomService(this.options);
         IWorkOrderService workOrderService = new WorkOrderService(this.options);
+        IWorkOrderProductService workOrderProductService = new WorkOrderProductService(this.options);
         IProductStockService productStockService = new ProductStockService(this.options);
 
         Log.Debug("Test ProductUnit (paket) oluştur");
@@ -79,13 +80,19 @@ internal class WorOrderScenario
                 SourceRoomId = null,
                 TargetRoomId = stockRoom1.StockRoomId,
             };
-            var workOrder1Product1 = new WorkOrderProduct() { };
             await workOrderService.Insert(workOrder1);
+
+            var workOrder1Product1 = new WorkOrderProduct()
+            {
+                WorkOrderId = workOrder1.WorkOrderId,
+                ProductId = product.ProductId,
+                Quantity = 5
+            };
+            await workOrderProductService.Insert(workOrder1Product1);
             Log.Debug(stockRoom1.RoomName + " de " + workOrder1Product1.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
             var productStock1 = productStockService.GetProductStockInRoom(product.ProductId, workOrder1.TargetRoomId);
             Log.Debug(productStock1);
             productStock1.Quantity.ShouldBe(workOrder1Product1.Quantity);
-
 
             var workOrder2 = new WorkOrder()
             {
@@ -93,8 +100,15 @@ internal class WorOrderScenario
                 SourceRoomId = null,
                 TargetRoomId = stockRoom1.StockRoomId,
             };
-            var workOrder2Product1 = new WorkOrderProduct() { };
             await workOrderService.Insert(workOrder2);
+
+            var workOrder2Product1 = new WorkOrderProduct()
+            {
+                WorkOrderId = workOrder2.WorkOrderId,
+                ProductId = product.ProductId,
+                Quantity = 6
+            };
+            await workOrderProductService.Insert(workOrder2Product1);
             Log.Debug(stockRoom1.RoomName + " de " + workOrder1Product1.Quantity + workOrder2Product1.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
             var productStock2 = productStockService.GetProductStockInRoom(product.ProductId, workOrder2.TargetRoomId);
             Log.Debug(productStock2);

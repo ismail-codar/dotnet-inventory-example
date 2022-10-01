@@ -98,14 +98,29 @@ namespace dotnet_inventory_example.Services
             .On(productStock => new { productStock.StockRoomId, productStock.ProductId }) // conflict durumunda -> StockRoomId, ProductId kaydı var ise 
             .WhenMatched(productStock => new ProductStock
             {
-                Quantity = productStock.Quantity + quantity // var olan kaydın quantity değerini arttır
+                Quantity = productStock.Quantity + quantity // var olan kaydın quantity değerini güncele
             })
             .RunAsync();
         }
 
         public async Task workOrderInsertProcuctStockChanges(InventoryDbContext context, WorkOrderProduct workOrderProduct)
         {
-
+            var workOrderRepository = new WorkOrderRepository(context);
+            WorkOrder workOrder = await workOrderRepository.GetById(workOrderProduct.WorkOrderId);
+            if (workOrder.SourceRoomId != null)
+            {
+                await upsertProductStock(context: context,
+                                   productId: workOrderProduct.ProductId,
+                                   roomId: (int)workOrder.SourceRoomId,
+                                   quantity: -1 * workOrderProduct.Quantity);
+            }
+            if (workOrder.TargetRoomId != null)
+            {
+                await upsertProductStock(context: context,
+                                   productId: workOrderProduct.ProductId,
+                                   roomId: (int)workOrder.TargetRoomId,
+                                   quantity: workOrderProduct.Quantity);
+            }
         }
 
         public Task workOrderUpdateProcuctStockChanges(InventoryDbContext context, WorkOrderProduct workOrderProduct)
