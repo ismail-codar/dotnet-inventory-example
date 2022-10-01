@@ -8,7 +8,7 @@
 @using System.Threading.Tasks
 
 @inject IProductService ProductService
-@inject IProductUnitService ProductUnitService
+@inject IProductUnitService productUnitService
 @inherits BaseCrud<Product, ProductValidator>
 
 
@@ -32,7 +32,7 @@
 
             c.Add(o => o.UnitId, true)
     .SetSelectField(true, o => o.Unit.UnitName,
-    ProductUnitService.GetAllProductUnit).Titled("Unit").SetCrudHidden(false, false, true, false);
+    productUnitService.GetAllProductUnit).Titled("Unit").SetCrudHidden(false, false, true, false);
 
             c.Add(o => o.Unit.UnitName).Titled("UnitName")
     .SetCrudHidden(true);

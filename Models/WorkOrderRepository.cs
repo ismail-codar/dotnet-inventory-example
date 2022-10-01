@@ -13,7 +13,7 @@ namespace dotnet_inventory_example.Models
 
         public override IQueryable<WorkOrder> GetAll()
         {
-            return EfDbSet;
+            return EfDbSet.Include("SourceRoom").Include("TargetRoom");
         }
 
         public override async Task<WorkOrder> GetById(object id)

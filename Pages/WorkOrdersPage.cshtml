@@ -1,0 +1,24 @@
+@page
+@using dotnet_inventory_example.BlazorComponents
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "WorkOrderProducts";
+}
+
+<div class="col-sm-12">
+    @(await Html.RenderComponentAsync<WorkOrderProductsComponent>(RenderMode.ServerPrerendered))
+</div>
+
+
+<script src="~/_content/GridBlazor/js/gridblazor.js"></script>
+<script src="~/_content/Agno.BlazorInputFile/inputfile.js"></script>
+<script src="~/_framework/blazor.server.js" autostart="false"></script>
+
+<script type="text/javascript">
+    Blazor.start({
+        configureSignalR: function (builder) {
+            builder.withUrl("/_blazor");
+        }
+    });
+</script>

@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace dotnet_inventory_example.Services
 {
@@ -82,10 +84,24 @@ namespace dotnet_inventory_example.Services
                 repository.Save();
             }
         }
+
+        public IEnumerable<SelectItem> GetAllStockRooms()
+        {
+            using (var context = new InventoryDbContext(_options))
+            {
+                StockRoomRepository repository = new StockRoomRepository(context);
+                var list = repository.GetAll()
+                    .Select(r => new SelectItem(r.StockRoomId + "", r.StockBuilding.BuildingName + " - " + r.RoomName))
+                    .ToList();
+                return list;
+            }
+        }
     }
 
     public interface IStockRoomService : ICrudDataService<StockRoom>
     {
+
+        IEnumerable<SelectItem> GetAllStockRooms();
         Task<ItemsDTO<StockRoom>> GetsGridRowsAsync(Action<IGridColumnCollection<StockRoom>> columns, QueryDictionary<StringValues> query);
     }
 }

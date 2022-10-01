@@ -1,0 +1,91 @@
+@using GridBlazor.Resources
+@using Models.Validators
+@using dotnet_inventory_example.Models
+@using dotnet_inventory_example.Resources
+@using dotnet_inventory_example.Services
+@using Microsoft.Extensions.Primitives
+@using System.Globalization
+@using System.Threading.Tasks
+
+@inject IWorkOrderService workOrderService
+@inject IWorkOrderProductService workOrderProductService
+@inject IStockRoomService stockRoomService;
+@inherits BaseCrud<WorkOrder, WorkOrderValidator>
+
+
+@RenderGridUI()
+
+
+@code
+{
+        protected override async Task OnParametersSetAsync()
+        {
+                var locale = CultureInfo.CurrentCulture;
+                SharedResource.Culture = locale;
+
+                var query = new QueryDictionary<StringValues>();
+
+                Func<object[], bool, bool, bool, bool, Task<IGrid>> subGrids = async (keys, create, read, update, delete) =>
+                {
+                        var subGridQuery = new QueryDictionary<StringValues>();
+
+                        Action<IGridColumnCollection<WorkOrderProduct>> workOrderProductColumns = c =>
+        {
+        c.Add(o => o.ProductId).Titled("Product");
+        c.Add(o => o.Quantity).Titled("Quantity");
+                        };
+
+                        var subGridClient = new GridClient<WorkOrderProduct>(q =>
+        workOrderProductService.GetsGridRowsAsync(workOrderProductColumns, q),
+        query, false, "WorkOrderProductGrid", workOrderProductColumns, locale)
+        .Sortable()
+        .Filterable()
+        .SetStriped(true)
+        .Crud(create, read, update, delete, workOrderProductService)
+        .WithMultipleFilters()
+        .WithGridItemsCount();
+
+                        await subGridClient.UpdateGrid();
+                        return subGridClient.Grid;
+                };
+
+                Action<IGridColumnCollection<WorkOrder>> workOrderColumns = c =>
+                {
+                        c.Add(o => o.WorkOrderId).SetPrimaryKey(true).SetWidth(30).Titled(SharedResource.Number);
+
+                        c.Add(o => o.SourceRoomId, true).SetSelectField(true, o => o.SourceRoom.RoomName,
+        stockRoomService.GetAllStockRooms).Titled("SourceRoom").SetCrudHidden(false, false, true, false);
+                        c.Add(o => o.SourceRoom.RoomName).Titled("SourceRoomName").SetCrudHidden(true);
+
+                        c.Add(o => o.TargetRoomId, true).SetSelectField(true, o => o.TargetRoom.RoomName,
+        stockRoomService.GetAllStockRooms).Titled("TargetRoom").SetCrudHidden(false, false, true, false);
+                        c.Add(o => o.TargetRoom.RoomName).Titled("TargetRoomName").SetCrudHidden(true);
+
+                        c.Add(o => o.Date).Titled("Date").Format("{0:yyyy-MM-dd}");
+                        c.Add(o => o.WorkOrderProducts).Titled("WorkOrderProducts").SubGrid("tabGroup1", subGrids, ("WorkOrderId",
+        "WorkOrderId"));
+                };
+
+                var client = new GridClient<WorkOrder>(q => workOrderService.GetsGridRowsAsync(workOrderColumns, q),
+                query, false, "WorkOrdersGrid", workOrderColumns, locale)
+                .Sortable()
+                .Filterable()
+                .SetKeyboard(true)
+                .Groupable(true)
+                .ClearFiltersButton(true)
+                .SetStriped(true)
+                .WithMultipleFilters()
+                .Searchable(true, false)
+                .WithGridItemsCount()
+                .ChangePageSize(true)
+                .Crud(true, workOrderService);
+
+                _grid = client.Grid;
+
+                // Set new items to grid
+                _task = client.UpdateGrid();
+                await _task;
+
+        }
+
+}

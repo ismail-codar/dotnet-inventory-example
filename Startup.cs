@@ -56,6 +56,7 @@ namespace dotnet_inventory_example
             services.AddScoped<IStockRoomService, StockRoomService>();
             services.AddScoped<IProductStockService, ProductStockService>();
             services.AddScoped<IWorkOrderService, WorkOrderService>();
+            services.AddScoped<IWorkOrderProductService, WorkOrderProductService>();
 
             services.Configure<RequestLocalizationOptions>(
                 options =>
