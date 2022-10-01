@@ -54,5 +54,24 @@ namespace dotnet_inventory_example.Controllers
             return View();
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            try
+            {
+                Response.Cookies.Append(
+                    CookieRequestCultureProvider.DefaultCookieName,
+                    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                    new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+                );
+            }
+            catch (Exception)
+            {
+            }
+            return LocalRedirect(returnUrl);
+        }
+
     }
 }

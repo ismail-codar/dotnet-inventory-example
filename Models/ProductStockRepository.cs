@@ -13,7 +13,7 @@ namespace dotnet_inventory_example.Models
 
         public override IQueryable<ProductStock> GetAll()
         {
-            return EfDbSet;
+            return EfDbSet.Include("Product").Include("StockRoom");
         }
 
         public async Task Insert(ProductStock ProductStock)

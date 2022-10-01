@@ -1,0 +1,56 @@
+@using GridBlazor.Resources
+@using Models.Validators
+@using dotnet_inventory_example.Models
+@using dotnet_inventory_example.Resources
+@using dotnet_inventory_example.Services
+@using Microsoft.Extensions.Primitives
+@using System.Globalization
+@using System.Threading.Tasks
+
+@inject IProductStockService productStockService
+@inherits BaseCrud<ProductStock, ProductStockValidator>
+
+
+@RenderGridUI()
+
+
+@code
+{
+    protected override async Task OnParametersSetAsync()
+    {
+        var locale = CultureInfo.CurrentCulture;
+        SharedResource.Culture = locale;
+
+        var query = new QueryDictionary<StringValues>();
+
+        Action<IGridColumnCollection<ProductStock>> productStockColumns = c =>
+        {
+            c.Add(o => o.Product.ProductName).Titled("ProductName");
+            c.Add(o => o.StockRoom.RoomName).Titled("RoomName");
+            c.Add(o => o.Quantity).Titled("Quantity");
+        };
+
+        var client = new GridClient<ProductStock>(q => productStockService.GetsGridRowsAsync(productStockColumns,
+        q),
+        query, false, "ProductStocksGrid", productStockColumns, locale)
+        .Sortable()
+        .Groupable()
+        .Filterable()
+        .SetKeyboard(true)
+        .ClearFiltersButton(true)
+        .SetStriped(true)
+        .WithMultipleFilters()
+        .Searchable(true, false)
+        .WithGridItemsCount()
+        .ChangePageSize(true)
+        .Crud(false, false, false, false, productStockService);
+
+        _grid = client.Grid;
+
+        // Set new items to grid
+        _task = client.UpdateGrid();
+        await _task;
+
+    }
+
+}
