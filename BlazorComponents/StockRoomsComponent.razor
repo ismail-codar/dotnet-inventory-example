@@ -30,7 +30,7 @@
 
             Action<IGridColumnCollection<StockRoom>> stockRoomColumns = c =>
     {
-    c.Add(o => o.StockRoomId).SetPrimaryKey(true).Titled(SharedResource.Number);
+    c.Add(o => o.StockRoomId).SetPrimaryKey(true).SetWidth(30).Titled(SharedResource.Number);
     c.Add(o => o.RoomName).Titled("RoomName");
             };
 
@@ -49,7 +49,7 @@
 
         Action<IGridColumnCollection<StockBuilding>> stockBuildingColumns = c =>
         {
-            c.Add(o => o.StockBuildingId).SetPrimaryKey(true).Titled(SharedResource.Number);
+            c.Add(o => o.StockBuildingId).SetPrimaryKey(true).SetWidth(30).Titled(SharedResource.Number);
             c.Add(o => o.BuildingName).Titled("BuildingName");
             c.Add(o => o.StockRooms).Titled("StockRooms").SubGrid("tabGroup1", subGrids, ("StockBuildingId", "StockBuildingId"));
         };
