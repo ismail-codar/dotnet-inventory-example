@@ -31,7 +31,6 @@ namespace dotnet_inventory_example.Services
                         .WithPaging(10)
                         .Filterable()
                         .WithMultipleFilters()
-                        .Groupable(true)
                         .Searchable(true, false, false)
                         .SetRemoveDiacritics<InventoryDbContext>("RemoveDiacritics");
 
