@@ -12,7 +12,7 @@ namespace dotnet_inventory_example.Models
         public int Quantity { get; set; }
         public DateTime Date { get; set; }
 
-        public virtual Product2 Product { get; set; }
+        public virtual Product Product { get; set; }
         public virtual StockRoom SourceRoom { get; set; }
         public virtual StockRoom TargetRoom { get; set; }
     }

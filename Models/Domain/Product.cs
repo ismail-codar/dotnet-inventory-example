@@ -15,9 +15,9 @@ namespace dotnet_inventory_example.Models
     using System.Collections.Generic;
     using GridShared.DataAnnotations;
 
-    public partial class Product2
+    public partial class Product
     {
-        public Product2()
+        public Product()
         {
         }
         [Key]

@@ -12,7 +12,7 @@ namespace dotnet_inventory_example.Models
         [Key]
         public int ProductId { get; set; }
 
-        public virtual Product2 Product { get; set; }
+        public virtual Product Product { get; set; }
         public virtual StockRoom StockRoom { get; set; }
     }
 }

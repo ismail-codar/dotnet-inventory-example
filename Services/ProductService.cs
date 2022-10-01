@@ -19,14 +19,14 @@ namespace dotnet_inventory_example.Services
             _options = options;
         }
 
-        public async Task<ItemsDTO<Product2>> GetProduct2sGridRowsAsync(Action<IGridColumnCollection<Product2>> columns,
+        public async Task<ItemsDTO<Product>> GetProductsGridRowsAsync(Action<IGridColumnCollection<Product>> columns,
             QueryDictionary<StringValues> query)
         {
             using (var context = new InventoryDbContext(_options))
             {
-                var repository = new ProductsRepository2(context);
-                var server = new GridServer<Product2>(repository.GetAll(), new QueryCollection(query),
-                    true, "Product2sGrid", columns)
+                var repository = new ProductsRepository(context);
+                var server = new GridServer<Product>(repository.GetAll(), new QueryCollection(query),
+                    true, "ProductsGrid", columns)
                         .Sortable()
                         .WithPaging(10)
                         .Filterable()
@@ -41,32 +41,32 @@ namespace dotnet_inventory_example.Services
             }
         }
 
-        public async Task<Product2> Get(params object[] keys)
+        public async Task<Product> Get(params object[] keys)
         {
             using (var context = new InventoryDbContext(_options))
             {
-                int Product2Id;
-                int.TryParse(keys[0].ToString(), out Product2Id);
-                var repository = new ProductsRepository2(context);
-                return await repository.GetById(Product2Id);
+                int ProductId;
+                int.TryParse(keys[0].ToString(), out ProductId);
+                var repository = new ProductsRepository(context);
+                return await repository.GetById(ProductId);
             }
         }
 
-        public async Task Insert(Product2 item)
+        public async Task Insert(Product item)
         {
             using (var context = new InventoryDbContext(_options))
             {
-                var repository = new ProductsRepository2(context);
+                var repository = new ProductsRepository(context);
                 await repository.Insert(item);
                 repository.Save();
             }
         }
 
-        public async Task Update(Product2 item)
+        public async Task Update(Product item)
         {
             using (var context = new InventoryDbContext(_options))
             {
-                var repository = new ProductsRepository2(context);
+                var repository = new ProductsRepository(context);
                 await repository.Update(item);
                 repository.Save();
             }
@@ -76,16 +76,16 @@ namespace dotnet_inventory_example.Services
         {
             using (var context = new InventoryDbContext(_options))
             {
-                var Product2 = await Get(keys);
-                var repository = new ProductsRepository2(context);
-                repository.Delete(Product2);
+                var Product = await Get(keys);
+                var repository = new ProductsRepository(context);
+                repository.Delete(Product);
                 repository.Save();
             }
         }
     }
 
-    public interface IProductService : ICrudDataService<Product2>
+    public interface IProductService : ICrudDataService<Product>
     {
-        Task<ItemsDTO<Product2>> GetProduct2sGridRowsAsync(Action<IGridColumnCollection<Product2>> columns, QueryDictionary<StringValues> query);
+        Task<ItemsDTO<Product>> GetProductsGridRowsAsync(Action<IGridColumnCollection<Product>> columns, QueryDictionary<StringValues> query);
     }
 }

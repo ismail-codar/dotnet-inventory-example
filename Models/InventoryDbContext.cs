@@ -26,7 +26,7 @@ namespace dotnet_inventory_example.Models
         }
 
 
-        public DbSet<Product2> Product { get; set; }
+        public DbSet<Product> Product { get; set; }
         public DbSet<ProductUnit> ProductUnit { get; set; }
         public DbSet<ProductStock> ProductStock { get; set; }
         public DbSet<StockBuilding> StockBuilding { get; set; }

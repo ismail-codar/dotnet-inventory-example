@@ -12,7 +12,7 @@ namespace dotnet_inventory_example.Models
         public int UnitId { get; set; }
         public string UnitName { get; set; }
 
-        // public virtual ICollection<Product2> Products { get; set; }
+        // public virtual ICollection<Product> Products { get; set; }
 
     }
 }

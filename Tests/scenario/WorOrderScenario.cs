@@ -40,7 +40,7 @@ internal class WorOrderScenario
         {
             await productUnitService.Insert(productUnit);
             Log.Debug("Test product oluştur");
-            var product = new Product2()
+            var product = new Product()
             {
                 Description = "deneme",
                 ProductName = "Test product",

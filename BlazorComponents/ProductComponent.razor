@@ -9,7 +9,7 @@
 
 @inject IProductService ProductService
 @inject IProductUnitService ProductUnitService
-@inherits BaseCrud<Product2, Product2Validator>
+@inherits BaseCrud<Product, ProductValidator>
 
 
 @RenderGridUI()
@@ -24,7 +24,7 @@
 
         var query = new QueryDictionary<StringValues>();
 
-        Action<IGridColumnCollection<Product2>> Product2Columns = c =>
+        Action<IGridColumnCollection<Product>> ProductColumns = c =>
         {
             c.Add(o => o.ProductId).SetPrimaryKey(true).Titled(SharedResource.Number);
             c.Add(o => o.ProductName).Titled("ProductName");
@@ -41,8 +41,8 @@
             c.Add(o => o.Description).Titled("Description");
         };
 
-        var client = new GridClient<Product2>(q => ProductService.GetProduct2sGridRowsAsync(Product2Columns, q),
-        query, false, "Product2sGrid", Product2Columns, locale)
+        var client = new GridClient<Product>(q => ProductService.GetProductsGridRowsAsync(ProductColumns, q),
+        query, false, "ProductsGrid", ProductColumns, locale)
         .Sortable()
         .Filterable()
         .SetKeyboard(true)
