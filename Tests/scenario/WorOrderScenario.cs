@@ -32,6 +32,10 @@ internal class WorOrderScenario
         {
             UnitName = "Paket"
         };
+        var stockBuilding = new StockBuilding()
+        {
+            BuildingName = "Bina 1",
+        };
         try
         {
             await productUnitService.Insert(productUnit);
@@ -47,10 +51,6 @@ internal class WorOrderScenario
             await productService.Insert(product);
 
             Log.Debug("Stock building oluştur");
-            var stockBuilding = new StockBuilding()
-            {
-                BuildingName = "Bina 1",
-            };
             await stockBuildingService.Insert(stockBuilding);
 
 
@@ -109,6 +109,7 @@ internal class WorOrderScenario
         finally
         {
             await productUnitService.Delete(productUnit.UnitId);
+            await stockBuildingService.Delete(stockBuilding.StockBuildingId);
         }
     }
 }

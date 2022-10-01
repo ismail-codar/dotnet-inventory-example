@@ -1,0 +1,79 @@
+@using GridBlazor.Resources
+@using Models.Validators
+@using dotnet_inventory_example.Models
+@using dotnet_inventory_example.Resources
+@using dotnet_inventory_example.Services
+@using Microsoft.Extensions.Primitives
+@using System.Globalization
+@using System.Threading.Tasks
+
+@inject IStockBuildingService stockBuildingService
+@inject IStockRoomService stockRoomService
+@inherits BaseCrud<StockBuilding, StockBuildingValidator>
+
+
+@RenderGridUI()
+
+
+@code
+{
+    protected override async Task OnParametersSetAsync()
+    {
+        var locale = CultureInfo.CurrentCulture;
+        SharedResource.Culture = locale;
+
+        var query = new QueryDictionary<StringValues>();
+
+        Func<object[], bool, bool, bool, bool, Task<IGrid>> subGrids = async (keys, create, read, update, delete) =>
+        {
+            var subGridQuery = new QueryDictionary<StringValues>();
+
+            Action<IGridColumnCollection<StockRoom>> stockRoomColumns = c =>
+    {
+    c.Add(o => o.StockRoomId).SetPrimaryKey(true).Titled(SharedResource.Number);
+    c.Add(o => o.RoomName).Titled("RoomName");
+            };
+
+            var subGridClient = new GridClient<StockRoom>(q => stockRoomService.GetsGridRowsAsync(stockRoomColumns, q),
+    query, false, "StockRoomGrid", stockRoomColumns, locale)
+    .Sortable()
+    .Filterable()
+    .SetStriped(true)
+    .Crud(create, read, update, delete, stockRoomService)
+    .WithMultipleFilters()
+    .WithGridItemsCount();
+
+            await subGridClient.UpdateGrid();
+            return subGridClient.Grid;
+        };
+
+        Action<IGridColumnCollection<StockBuilding>> stockBuildingColumns = c =>
+        {
+            c.Add(o => o.StockBuildingId).SetPrimaryKey(true).Titled(SharedResource.Number);
+            c.Add(o => o.BuildingName).Titled("BuildingName");
+            c.Add(o => o.StockRooms).Titled("StockRooms").SubGrid("tabGroup1", subGrids, ("StockBuildingId", "StockBuildingId"));
+        };
+
+        var client = new GridClient<StockBuilding>(q => stockBuildingService.GetsGridRowsAsync(stockBuildingColumns, q),
+        query, false, "StockBuildingsGrid", stockBuildingColumns, locale)
+        .Sortable()
+        .Filterable()
+        .SetKeyboard(true)
+        .Groupable(true)
+        .ClearFiltersButton(true)
+        .SetStriped(true)
+        .WithMultipleFilters()
+        .Searchable(true, false)
+        .WithGridItemsCount()
+        .ChangePageSize(true)
+        .Crud(true, stockBuildingService);
+
+        _grid = client.Grid;
+
+        // Set new items to grid
+        _task = client.UpdateGrid();
+        await _task;
+
+    }
+
+}
