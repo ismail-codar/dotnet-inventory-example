@@ -15,7 +15,6 @@ namespace dotnet_inventory_example
         public string ProductName { get; set; }
         public decimal UnitPrice { get; set; }
         public int UnitId { get; set; }
-        public int UnitsInStock { get; set; }
         public string Description { get; set; }
 
         public virtual ProductUnit Unit { get; set; }

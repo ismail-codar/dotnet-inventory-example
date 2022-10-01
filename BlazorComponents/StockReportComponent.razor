@@ -27,6 +27,7 @@
         {
             c.Add(o => o.Product.ProductName).Titled("ProductName");
             c.Add(o => o.StockRoom.RoomName).Titled("RoomName");
+            @* c.Add(o => o.StockRoom.StockBuilding.BuildingName + " - " + o.StockRoom.RoomName).Titled("RoomName"); *@
             c.Add(o => o.Quantity).Titled("Quantity");
         };
 

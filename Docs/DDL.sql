@@ -10,7 +10,6 @@ CREATE TABLE inventory.dbo.Product (
 	ProductName varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	UnitPrice decimal(10,2) NOT NULL,
 	UnitId int NOT NULL,
-	UnitsInStock int NOT NULL,
 	Description varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	CONSTRAINT Product_PK PRIMARY KEY (ProductId),
 	CONSTRAINT Product_FK FOREIGN KEY (UnitId) REFERENCES inventory.dbo.ProductUnit(UnitId) ON DELETE CASCADE

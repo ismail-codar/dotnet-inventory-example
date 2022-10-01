@@ -48,7 +48,6 @@ internal class WorOrderScenario
                 ProductName = "Test product",
                 UnitId = productUnit.UnitId,
                 UnitPrice = 3,
-                UnitsInStock = 6
             };
             await productService.Insert(product);
 
