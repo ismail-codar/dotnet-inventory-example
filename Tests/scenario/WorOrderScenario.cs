@@ -8,6 +8,7 @@ using GridShared;
 using NLog;
 using dotnet_inventory_example.Services;
 using System.Threading.Tasks;
+using dotnet_inventory_example;
 
 internal class WorOrderScenario
 {
@@ -75,31 +76,29 @@ internal class WorOrderScenario
             var workOrder1 = new WorkOrder()
             {
                 Date = DateTime.Now,
-                ProductId = product.ProductId,
                 SourceRoomId = null,
                 TargetRoomId = stockRoom1.StockRoomId,
-                Quantity = 5
             };
+            var workOrder1Product1 = new WorkOrderProduct() { };
             await workOrderService.Insert(workOrder1);
-            Log.Debug(stockRoom1.RoomName + " de " + workOrder1.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
+            Log.Debug(stockRoom1.RoomName + " de " + workOrder1Product1.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
             var productStock1 = productStockService.GetProductStockInRoom(product.ProductId, workOrder1.TargetRoomId);
             Log.Debug(productStock1);
-            productStock1.Quantity.ShouldBe(workOrder1.Quantity);
+            productStock1.Quantity.ShouldBe(workOrder1Product1.Quantity);
 
 
             var workOrder2 = new WorkOrder()
             {
                 Date = DateTime.Now,
-                ProductId = product.ProductId,
                 SourceRoomId = null,
                 TargetRoomId = stockRoom1.StockRoomId,
-                Quantity = 5
             };
+            var workOrder2Product1 = new WorkOrderProduct() { };
             await workOrderService.Insert(workOrder2);
-            Log.Debug(stockRoom1.RoomName + " de " + workOrder1.Quantity + workOrder2.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
+            Log.Debug(stockRoom1.RoomName + " de " + workOrder1Product1.Quantity + workOrder2Product1.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
             var productStock2 = productStockService.GetProductStockInRoom(product.ProductId, workOrder2.TargetRoomId);
             Log.Debug(productStock2);
-            productStock2.Quantity.ShouldBe(workOrder1.Quantity + workOrder2.Quantity);
+            productStock2.Quantity.ShouldBe(workOrder1Product1.Quantity + workOrder2Product1.Quantity);
         }
         catch (Exception ex)
         {

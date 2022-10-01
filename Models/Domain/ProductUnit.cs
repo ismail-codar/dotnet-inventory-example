@@ -1,18 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
 
-using System.ComponentModel.DataAnnotations;
-
-namespace dotnet_inventory_example.Models
+namespace dotnet_inventory_example
 {
     public partial class ProductUnit
     {
         public ProductUnit()
         {
+            Products = new HashSet<Product>();
         }
-        [Key]
+
         public int UnitId { get; set; }
         public string UnitName { get; set; }
 
-        // public virtual ICollection<Product> Products { get; set; }
-
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

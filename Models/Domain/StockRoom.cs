@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using GridShared.DataAnnotations;
 
-namespace dotnet_inventory_example.Models
+namespace dotnet_inventory_example
 {
     public partial class StockRoom
     {
@@ -20,9 +18,7 @@ namespace dotnet_inventory_example.Models
 
         public virtual StockBuilding StockBuilding { get; set; }
         public virtual ICollection<ProductStock> ProductStocks { get; set; }
-        [NotMapped]
         public virtual ICollection<WorkOrder> WorkOrderSourceRooms { get; set; }
-        [NotMapped]
         public virtual ICollection<WorkOrder> WorkOrderTargetRooms { get; set; }
     }
 }

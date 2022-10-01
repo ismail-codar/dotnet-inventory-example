@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace dotnet_inventory_example.Models
+namespace dotnet_inventory_example
 {
     public partial class StockBuilding
     {
