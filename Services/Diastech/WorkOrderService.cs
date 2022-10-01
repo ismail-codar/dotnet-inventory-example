@@ -94,10 +94,10 @@ namespace dotnet_inventory_example.Services
                 StockRoomId = roomId,
                 Quantity = quantity
             })
-            .On(v => new { v.StockRoomId, v.ProductId }) // conflict durumunda -> StockRoomId, ProductId kaydı var ise 
-            .WhenMatched(v => new ProductStock
+            .On(productStock => new { productStock.StockRoomId, productStock.ProductId }) // conflict durumunda -> StockRoomId, ProductId kaydı var ise 
+            .WhenMatched(productStock => new ProductStock
             {
-                Quantity = v.Quantity + quantity // var olan kaydın quantity değerini arttır
+                Quantity = productStock.Quantity + quantity // var olan kaydın quantity değerini arttır
             })
             .RunAsync();
         }
