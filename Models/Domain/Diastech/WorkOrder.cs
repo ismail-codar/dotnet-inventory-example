@@ -8,7 +8,7 @@ namespace dotnet_inventory_example.Models
         public int WorkOrderId { get; set; }
         public int ProductId { get; set; }
         public int? SourceRoomId { get; set; }
-        public int TargetRoomId { get; set; }
+        public int? TargetRoomId { get; set; }
         public int Quantity { get; set; }
         public DateTime Date { get; set; }
 

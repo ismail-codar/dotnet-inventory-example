@@ -32,9 +32,9 @@ internal class WorOrderScenario
         {
             UnitName = "Paket"
         };
-        await productUnitService.Insert(productUnit);
         try
         {
+            await productUnitService.Insert(productUnit);
             Log.Debug("Test product oluştur");
             var product = new Product2()
             {
@@ -81,19 +81,30 @@ internal class WorOrderScenario
                 Quantity = 5
             };
             await workOrderService.Insert(workOrder1);
+            Log.Debug(stockRoom1.RoomName + " de " + workOrder1.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
+            var productStock1 = productStockService.GetProductStockInRoom(product.ProductId, workOrder1.TargetRoomId);
+            Log.Debug(productStock1);
+            productStock1.Quantity.ShouldBe(workOrder1.Quantity);
 
-            Log.Debug("Oda 1 de " + workOrder1.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
-            // productStockService.Get()
-            var productStock = productStockService.GetProductStockInRoom(product.ProductId, workOrder1.TargetRoomId);
-            if (productStock != null)
+
+            var workOrder2 = new WorkOrder()
             {
-                Log.Debug(productStock);
-                productStock.Quantity.ShouldBe(workOrder1.Quantity);
-            }
+                Date = DateTime.Now,
+                ProductId = product.ProductId,
+                SourceRoomId = null,
+                TargetRoomId = stockRoom1.StockRoomId,
+                Quantity = 5
+            };
+            await workOrderService.Insert(workOrder2);
+            Log.Debug(stockRoom1.RoomName + " de " + workOrder1.Quantity + workOrder2.Quantity + " " + productUnit.UnitName + " " + product.ProductName + " olmalı");
+            var productStock2 = productStockService.GetProductStockInRoom(product.ProductId, workOrder2.TargetRoomId);
+            Log.Debug(productStock2);
+            productStock2.Quantity.ShouldBe(workOrder1.Quantity + workOrder2.Quantity);
         }
         catch (Exception ex)
         {
             Log.Error(ex);
+            throw ex;
         }
         finally
         {

@@ -84,7 +84,7 @@ namespace dotnet_inventory_example.Services
             }
         }
 
-        public ProductStock GetProductStockInRoom(int productId, int targetRoomId)
+        public ProductStock GetProductStockInRoom(int productId, int? targetRoomId)
         {
             using (var context = new NorthwindDbContext(_options))
             {
@@ -97,7 +97,7 @@ namespace dotnet_inventory_example.Services
 
     public interface IProductStockService : ICrudDataService<ProductStock>
     {
-        ProductStock GetProductStockInRoom(int productId, int targetRoomId);
+        ProductStock GetProductStockInRoom(int productId, int? targetRoomId);
         Task<ItemsDTO<ProductStock>> GetsGridRowsAsync(Action<IGridColumnCollection<ProductStock>> columns, QueryDictionary<StringValues> query);
     }
 }

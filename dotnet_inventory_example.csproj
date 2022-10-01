@@ -36,6 +36,7 @@
     <PackageReference Include="Shouldly" Version="4.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
     <PackageReference Include="NLog" Version="5.0.4" />
+    <PackageReference Include="FlexLabs.EntityFrameworkCore.Upsert" Version="6.0.1" />
   </ItemGroup>
 
 </Project>

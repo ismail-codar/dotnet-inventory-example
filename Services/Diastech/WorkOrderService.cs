@@ -57,6 +57,7 @@ namespace dotnet_inventory_example.Services
             using (var context = new NorthwindDbContext(_options))
             {
                 var repository = new WorkOrderRepository(context);
+                await this.workOrderInsertProcuctStockChanges(context, item);
                 await repository.Insert(item);
                 repository.Save();
             }
@@ -67,6 +68,7 @@ namespace dotnet_inventory_example.Services
             using (var context = new NorthwindDbContext(_options))
             {
                 var repository = new WorkOrderRepository(context);
+                await this.workOrderUpdateProcuctStockChanges(context, item);
                 await repository.Update(item);
                 repository.Save();
             }
@@ -78,14 +80,79 @@ namespace dotnet_inventory_example.Services
             {
                 var dataItem = await Get(keys);
                 var repository = new WorkOrderRepository(context);
+                await this.workOrderDeleteProcuctStockChanges(context, keys);
                 repository.Delete(dataItem);
                 repository.Save();
             }
+        }
+
+        public async Task upsertProductStock(NorthwindDbContext context, int productId, int roomId, int quantity)
+        {
+            await context.ProductStock.Upsert(new ProductStock // insert
+            {
+                ProductId = productId,
+                StockRoomId = roomId,
+                Quantity = quantity
+            })
+            .On(v => new { v.StockRoomId, v.ProductId }) // conflict durumunda -> StockRoomId, ProductId kaydı var ise 
+            .WhenMatched(v => new ProductStock
+            {
+                Quantity = v.Quantity + quantity // var olan kaydın quantity değerini arttır
+            })
+            .RunAsync();
+        }
+
+        public async Task workOrderInsertProcuctStockChanges(NorthwindDbContext context, WorkOrder workOrder)
+        {
+            if (workOrder.SourceRoomId != null)
+            {
+                await upsertProductStock(context: context,
+                                   productId: workOrder.ProductId,
+                                   roomId: (int)workOrder.SourceRoomId,
+                                   quantity: workOrder.Quantity);
+            }
+            if (workOrder.TargetRoomId != null)
+            {
+                await upsertProductStock(context: context,
+                                   productId: workOrder.ProductId,
+                                   roomId: (int)workOrder.TargetRoomId,
+                                   quantity: workOrder.Quantity);
+            }
+        }
+
+        public Task workOrderUpdateProcuctStockChanges(NorthwindDbContext context, WorkOrder workOrder)
+        {
+            if (workOrder.SourceRoomId != null)
+            {
+
+            }
+            if (workOrder.TargetRoomId != null)
+            {
+
+            }
+            throw new NotImplementedException();
+        }
+
+        public async Task workOrderDeleteProcuctStockChanges(NorthwindDbContext context, params object[] keys)
+        {
+            WorkOrder workOrder = await Get(keys);
+            if (workOrder.SourceRoomId != null)
+            {
+
+            }
+            if (workOrder.TargetRoomId != null)
+            {
+
+            }
+            throw new NotImplementedException();
         }
     }
 
     public interface IWorkOrderService : ICrudDataService<WorkOrder>
     {
         Task<ItemsDTO<WorkOrder>> GetsGridRowsAsync(Action<IGridColumnCollection<WorkOrder>> columns, QueryDictionary<StringValues> query);
+        Task workOrderInsertProcuctStockChanges(NorthwindDbContext context, WorkOrder workOrder);
+        Task workOrderUpdateProcuctStockChanges(NorthwindDbContext context, WorkOrder workOrder);
+        Task workOrderDeleteProcuctStockChanges(NorthwindDbContext context, params object[] keys);
     }
 }

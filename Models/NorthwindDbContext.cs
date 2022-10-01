@@ -29,6 +29,10 @@ namespace dotnet_inventory_example.Models
                 .WithMany(s => s.Employees)
                 .HasForeignKey(t => t.TerritoryID);
 
+
+            modelBuilder.Entity<ProductStock>()
+                .HasKey(r => new { r.ProductId, r.StockRoomId });
+
             base.OnModelCreating(modelBuilder);
         }
 
