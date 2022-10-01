@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace dotnet_inventory_example.Services
 {
-    public class Product2Service : IProductService2
+    public class ProductService : IProductService
     {
-        private readonly DbContextOptions<NorthwindDbContext> _options;
+        private readonly DbContextOptions<InventoryDbContext> _options;
 
-        public Product2Service(DbContextOptions<NorthwindDbContext> options)
+        public ProductService(DbContextOptions<InventoryDbContext> options)
         {
             _options = options;
         }
@@ -22,7 +22,7 @@ namespace dotnet_inventory_example.Services
         public async Task<ItemsDTO<Product2>> GetProduct2sGridRowsAsync(Action<IGridColumnCollection<Product2>> columns,
             QueryDictionary<StringValues> query)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductsRepository2(context);
                 var server = new GridServer<Product2>(repository.GetAll(), new QueryCollection(query),
@@ -33,7 +33,7 @@ namespace dotnet_inventory_example.Services
                         .WithMultipleFilters()
                         .Groupable(true)
                         .Searchable(true, false, false)
-                        .SetRemoveDiacritics<NorthwindDbContext>("RemoveDiacritics");
+                        .SetRemoveDiacritics<InventoryDbContext>("RemoveDiacritics");
 
                 // return items to displays
                 var items = await server.GetItemsToDisplayAsync(async x => await x.ToListAsync());
@@ -43,7 +43,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task<Product2> Get(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 int Product2Id;
                 int.TryParse(keys[0].ToString(), out Product2Id);
@@ -54,7 +54,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Insert(Product2 item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductsRepository2(context);
                 await repository.Insert(item);
@@ -64,7 +64,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Update(Product2 item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductsRepository2(context);
                 await repository.Update(item);
@@ -74,7 +74,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Delete(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var Product2 = await Get(keys);
                 var repository = new ProductsRepository2(context);
@@ -84,7 +84,7 @@ namespace dotnet_inventory_example.Services
         }
     }
 
-    public interface IProductService2 : ICrudDataService<Product2>
+    public interface IProductService : ICrudDataService<Product2>
     {
         Task<ItemsDTO<Product2>> GetProduct2sGridRowsAsync(Action<IGridColumnCollection<Product2>> columns, QueryDictionary<StringValues> query);
     }

@@ -12,15 +12,15 @@ using System.Threading.Tasks;
 internal class WorOrderScenario
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-    DbContextOptions<NorthwindDbContext> options;
+    DbContextOptions<InventoryDbContext> options;
 
-    public WorOrderScenario(DbContextOptions<NorthwindDbContext> options)
+    public WorOrderScenario(DbContextOptions<InventoryDbContext> options)
     {
         this.options = options;
     }
     internal async Task E2ETest()
     {
-        IProductService2 productService = new Product2Service(this.options);
+        IProductService productService = new ProductService(this.options);
         IProductUnitService productUnitService = new ProductUnitService(this.options);
         IStockBuildingService stockBuildingService = new StockBuildingService(this.options);
         IStockRoomService stockRoomService = new StockRoomService(this.options);

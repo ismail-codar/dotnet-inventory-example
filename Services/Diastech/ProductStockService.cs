@@ -13,9 +13,9 @@ namespace dotnet_inventory_example.Services
 {
     public class ProductStockService : IProductStockService
     {
-        private readonly DbContextOptions<NorthwindDbContext> _options;
+        private readonly DbContextOptions<InventoryDbContext> _options;
 
-        public ProductStockService(DbContextOptions<NorthwindDbContext> options)
+        public ProductStockService(DbContextOptions<InventoryDbContext> options)
         {
             _options = options;
         }
@@ -23,7 +23,7 @@ namespace dotnet_inventory_example.Services
         public async Task<ItemsDTO<ProductStock>> GetsGridRowsAsync(Action<IGridColumnCollection<ProductStock>> columns,
             QueryDictionary<StringValues> query)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductStockRepository(context);
                 var server = new GridServer<ProductStock>(repository.GetAll(), new QueryCollection(query),
@@ -34,7 +34,7 @@ namespace dotnet_inventory_example.Services
                         .WithMultipleFilters()
                         .Groupable(true)
                         .Searchable(true, false, false)
-                        .SetRemoveDiacritics<NorthwindDbContext>("RemoveDiacritics");
+                        .SetRemoveDiacritics<InventoryDbContext>("RemoveDiacritics");
 
                 // return items to displays
                 var items = await server.GetItemsToDisplayAsync(async x => await x.ToListAsync());
@@ -44,7 +44,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task<ProductStock> Get(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 int ProductStockId;
                 int.TryParse(keys[0].ToString(), out ProductStockId);
@@ -55,7 +55,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Insert(ProductStock item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductStockRepository(context);
                 await repository.Insert(item);
@@ -65,7 +65,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Update(ProductStock item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductStockRepository(context);
                 await repository.Update(item);
@@ -75,7 +75,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Delete(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var dataItem = await Get(keys);
                 var repository = new ProductStockRepository(context);
@@ -86,7 +86,7 @@ namespace dotnet_inventory_example.Services
 
         public ProductStock GetProductStockInRoom(int productId, int? targetRoomId)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductStockRepository(context);
                 var list = repository.GetAll().Where(r => r.ProductId == productId && r.StockRoomId == targetRoomId).ToList();

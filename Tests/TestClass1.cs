@@ -21,8 +21,8 @@ namespace dotnet_inventory_example.Tests
         [TestInitialize]
         public void Setup()
         {
-            var builder = new DbContextOptionsBuilder<NorthwindDbContext>();
-            string connectionString = "Server=localhost;Database=Northwind;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=codaricodar!%2300CODARyekbas";
+            var builder = new DbContextOptionsBuilder<InventoryDbContext>();
+            string connectionString = "Server=localhost;Database=inventory;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=codaricodar!%2300CODARyekbas";
             builder.UseSqlServer(connectionString);
             this.worOrderScenario = new WorOrderScenario(builder.Options);
         }

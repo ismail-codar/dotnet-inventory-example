@@ -12,9 +12,9 @@ namespace dotnet_inventory_example.Services
 {
     public class StockRoomService : IStockRoomService
     {
-        private readonly DbContextOptions<NorthwindDbContext> _options;
+        private readonly DbContextOptions<InventoryDbContext> _options;
 
-        public StockRoomService(DbContextOptions<NorthwindDbContext> options)
+        public StockRoomService(DbContextOptions<InventoryDbContext> options)
         {
             _options = options;
         }
@@ -22,7 +22,7 @@ namespace dotnet_inventory_example.Services
         public async Task<ItemsDTO<StockRoom>> GetsGridRowsAsync(Action<IGridColumnCollection<StockRoom>> columns,
             QueryDictionary<StringValues> query)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new StockRoomRepository(context);
                 var server = new GridServer<StockRoom>(repository.GetAll(), new QueryCollection(query),
@@ -33,7 +33,7 @@ namespace dotnet_inventory_example.Services
                         .WithMultipleFilters()
                         .Groupable(true)
                         .Searchable(true, false, false)
-                        .SetRemoveDiacritics<NorthwindDbContext>("RemoveDiacritics");
+                        .SetRemoveDiacritics<InventoryDbContext>("RemoveDiacritics");
 
                 // return items to displays
                 var items = await server.GetItemsToDisplayAsync(async x => await x.ToListAsync());
@@ -43,7 +43,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task<StockRoom> Get(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 int StockRoomId;
                 int.TryParse(keys[0].ToString(), out StockRoomId);
@@ -54,7 +54,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Insert(StockRoom item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new StockRoomRepository(context);
                 await repository.Insert(item);
@@ -64,7 +64,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Update(StockRoom item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new StockRoomRepository(context);
                 await repository.Update(item);
@@ -74,7 +74,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Delete(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var dataItem = await Get(keys);
                 var repository = new StockRoomRepository(context);

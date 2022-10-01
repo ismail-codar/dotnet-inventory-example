@@ -7,7 +7,7 @@
 @using System.Globalization
 @using System.Threading.Tasks
 
-@inject IProductService2 product2Service
+@inject IProductService ProductService
 @inject IProductUnitService ProductUnitService
 @inherits BaseCrud<Product2, Product2Validator>
 
@@ -41,7 +41,7 @@
             c.Add(o => o.Description).Titled("Description");
         };
 
-        var client = new GridClient<Product2>(q => product2Service.GetProduct2sGridRowsAsync(Product2Columns, q),
+        var client = new GridClient<Product2>(q => ProductService.GetProduct2sGridRowsAsync(Product2Columns, q),
         query, false, "Product2sGrid", Product2Columns, locale)
         .Sortable()
         .Filterable()
@@ -53,7 +53,7 @@
         .Searchable(true, false)
         .WithGridItemsCount()
         .ChangePageSize(true)
-        .Crud(true, product2Service);
+        .Crud(true, ProductService);
 
         _grid = client.Grid;
 

@@ -6,7 +6,7 @@ namespace dotnet_inventory_example.Models
 {
     public class StockRoomRepository : SqlRepository<StockRoom>, IStockRoomRepository
     {
-        public StockRoomRepository(NorthwindDbContext context)
+        public StockRoomRepository(InventoryDbContext context)
             : base(context)
         {
         }

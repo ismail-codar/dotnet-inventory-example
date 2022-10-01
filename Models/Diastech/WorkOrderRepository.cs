@@ -6,7 +6,7 @@ namespace dotnet_inventory_example.Models
 {
     public class WorkOrderRepository : SqlRepository<WorkOrder>, IWorkOrderRepository
     {
-        public WorkOrderRepository(NorthwindDbContext context)
+        public WorkOrderRepository(InventoryDbContext context)
             : base(context)
         {
         }

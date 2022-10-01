@@ -14,9 +14,9 @@ namespace dotnet_inventory_example.Services
 {
     public class ProductUnitService : IProductUnitService
     {
-        private readonly DbContextOptions<NorthwindDbContext> _options;
+        private readonly DbContextOptions<InventoryDbContext> _options;
 
-        public ProductUnitService(DbContextOptions<NorthwindDbContext> options)
+        public ProductUnitService(DbContextOptions<InventoryDbContext> options)
         {
             _options = options;
         }
@@ -24,7 +24,7 @@ namespace dotnet_inventory_example.Services
         public async Task<ItemsDTO<ProductUnit>> GetProductUnitGridRowsAsync(Action<IGridColumnCollection<ProductUnit>> columns,
             QueryDictionary<StringValues> query)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductUnitRepository(context);
                 var server = new GridServer<ProductUnit>(repository.GetAll(), new QueryCollection(query),
@@ -35,7 +35,7 @@ namespace dotnet_inventory_example.Services
                         .WithMultipleFilters()
                         .Groupable(true)
                         .Searchable(true, false, false)
-                        .SetRemoveDiacritics<NorthwindDbContext>("RemoveDiacritics");
+                        .SetRemoveDiacritics<InventoryDbContext>("RemoveDiacritics");
 
                 // return items to displays
                 var items = await server.GetItemsToDisplayAsync(async x => await x.ToListAsync());
@@ -45,7 +45,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task<ProductUnit> Get(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 int UnitId;
                 int.TryParse(keys[0].ToString(), out UnitId);
@@ -56,7 +56,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Insert(ProductUnit item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductUnitRepository(context);
                 await repository.Insert(item);
@@ -66,7 +66,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Update(ProductUnit item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new ProductUnitRepository(context);
                 await repository.Update(item);
@@ -76,7 +76,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Delete(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var Unit = await Get(keys);
                 var repository = new ProductUnitRepository(context);
@@ -87,7 +87,7 @@ namespace dotnet_inventory_example.Services
 
         public IEnumerable<SelectItem> GetAllProductUnit()
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 ProductUnitRepository repository = new ProductUnitRepository(context);
                 var list = repository.GetAll()

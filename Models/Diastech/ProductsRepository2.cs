@@ -6,7 +6,7 @@ namespace dotnet_inventory_example.Models
 {
     public class ProductsRepository2 : SqlRepository<Product2>, IProduct2sRepository
     {
-        public ProductsRepository2(NorthwindDbContext context)
+        public ProductsRepository2(InventoryDbContext context)
             : base(context)
         {
         }

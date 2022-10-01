@@ -28,7 +28,7 @@ namespace dotnet_inventory_example
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<NorthwindDbContext>(options =>
+            services.AddDbContext<InventoryDbContext>(options =>
             {
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
@@ -49,13 +49,8 @@ namespace dotnet_inventory_example
                 .AddDataAnnotationsLocalization();
 
             services.AddScoped<LanguageFilter>();
-            services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<ICustomerService, CustomerService>();
-            services.AddScoped<IEmployeeService, EmployeeService>();
-            services.AddScoped<IEmployeeFileService, EmployeeFileService>();
-            services.AddScoped<IShipperService, ShipperService>();
 
-            services.AddScoped<IProductService2, Product2Service>();
+            services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductUnitService, ProductUnitService>();
             services.AddScoped<IStockBuildingService, StockBuildingService>();
             services.AddScoped<IStockRoomService, StockRoomService>();

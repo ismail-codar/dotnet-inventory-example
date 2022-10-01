@@ -12,9 +12,9 @@ namespace dotnet_inventory_example.Services
 {
     public class WorkOrderService : IWorkOrderService
     {
-        private readonly DbContextOptions<NorthwindDbContext> _options;
+        private readonly DbContextOptions<InventoryDbContext> _options;
 
-        public WorkOrderService(DbContextOptions<NorthwindDbContext> options)
+        public WorkOrderService(DbContextOptions<InventoryDbContext> options)
         {
             _options = options;
         }
@@ -22,7 +22,7 @@ namespace dotnet_inventory_example.Services
         public async Task<ItemsDTO<WorkOrder>> GetsGridRowsAsync(Action<IGridColumnCollection<WorkOrder>> columns,
             QueryDictionary<StringValues> query)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new WorkOrderRepository(context);
                 var server = new GridServer<WorkOrder>(repository.GetAll(), new QueryCollection(query),
@@ -33,7 +33,7 @@ namespace dotnet_inventory_example.Services
                         .WithMultipleFilters()
                         .Groupable(true)
                         .Searchable(true, false, false)
-                        .SetRemoveDiacritics<NorthwindDbContext>("RemoveDiacritics");
+                        .SetRemoveDiacritics<InventoryDbContext>("RemoveDiacritics");
 
                 // return items to displays
                 var items = await server.GetItemsToDisplayAsync(async x => await x.ToListAsync());
@@ -43,7 +43,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task<WorkOrder> Get(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 int WorkOrderId;
                 int.TryParse(keys[0].ToString(), out WorkOrderId);
@@ -54,7 +54,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Insert(WorkOrder item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new WorkOrderRepository(context);
                 await this.workOrderInsertProcuctStockChanges(context, item);
@@ -65,7 +65,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Update(WorkOrder item)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var repository = new WorkOrderRepository(context);
                 await this.workOrderUpdateProcuctStockChanges(context, item);
@@ -76,7 +76,7 @@ namespace dotnet_inventory_example.Services
 
         public async Task Delete(params object[] keys)
         {
-            using (var context = new NorthwindDbContext(_options))
+            using (var context = new InventoryDbContext(_options))
             {
                 var dataItem = await Get(keys);
                 var repository = new WorkOrderRepository(context);
@@ -86,7 +86,7 @@ namespace dotnet_inventory_example.Services
             }
         }
 
-        public async Task upsertProductStock(NorthwindDbContext context, int productId, int roomId, int quantity)
+        public async Task upsertProductStock(InventoryDbContext context, int productId, int roomId, int quantity)
         {
             await context.ProductStock.Upsert(new ProductStock // insert
             {
@@ -102,7 +102,7 @@ namespace dotnet_inventory_example.Services
             .RunAsync();
         }
 
-        public async Task workOrderInsertProcuctStockChanges(NorthwindDbContext context, WorkOrder workOrder)
+        public async Task workOrderInsertProcuctStockChanges(InventoryDbContext context, WorkOrder workOrder)
         {
             if (workOrder.SourceRoomId != null)
             {
@@ -120,7 +120,7 @@ namespace dotnet_inventory_example.Services
             }
         }
 
-        public Task workOrderUpdateProcuctStockChanges(NorthwindDbContext context, WorkOrder workOrder)
+        public Task workOrderUpdateProcuctStockChanges(InventoryDbContext context, WorkOrder workOrder)
         {
             if (workOrder.SourceRoomId != null)
             {
@@ -133,7 +133,7 @@ namespace dotnet_inventory_example.Services
             throw new NotImplementedException();
         }
 
-        public async Task workOrderDeleteProcuctStockChanges(NorthwindDbContext context, params object[] keys)
+        public async Task workOrderDeleteProcuctStockChanges(InventoryDbContext context, params object[] keys)
         {
             WorkOrder workOrder = await Get(keys);
             if (workOrder.SourceRoomId != null)
@@ -151,8 +151,8 @@ namespace dotnet_inventory_example.Services
     public interface IWorkOrderService : ICrudDataService<WorkOrder>
     {
         Task<ItemsDTO<WorkOrder>> GetsGridRowsAsync(Action<IGridColumnCollection<WorkOrder>> columns, QueryDictionary<StringValues> query);
-        Task workOrderInsertProcuctStockChanges(NorthwindDbContext context, WorkOrder workOrder);
-        Task workOrderUpdateProcuctStockChanges(NorthwindDbContext context, WorkOrder workOrder);
-        Task workOrderDeleteProcuctStockChanges(NorthwindDbContext context, params object[] keys);
+        Task workOrderInsertProcuctStockChanges(InventoryDbContext context, WorkOrder workOrder);
+        Task workOrderUpdateProcuctStockChanges(InventoryDbContext context, WorkOrder workOrder);
+        Task workOrderDeleteProcuctStockChanges(InventoryDbContext context, params object[] keys);
     }
 }
