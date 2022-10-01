@@ -67,7 +67,7 @@
         stockRoomService.GetAllStockRooms).Titled("TargetRoom").SetCrudHidden(false, false, true, false);
                         c.Add(o => o.TargetRoom.RoomName).Titled("TargetRoomName").SetCrudHidden(true);
 
-                        c.Add(o => o.Date).Titled("Date").Format("{0:yyyy-MM-dd}");
+                        c.Add(o => o.Date).Titled("Date").Format("{0:yyyy-MM-dd}").Max(true).Min(true);
                         c.Add(o => o.WorkOrderProducts).Titled("WorkOrderProducts").SubGrid("tabGroup1", subGrids, ("WorkOrderId",
         "WorkOrderId"));
                 };
