@@ -37,7 +37,7 @@
             c.Add(o => o.Unit.UnitName).Titled("UnitName")
     .SetCrudHidden(true);
 
-            c.Add(o => o.UnitsInStock).Titled("UnitsInStock").SetCrudHidden(false, false, true, false);
+            c.Add(o => o.UnitsInStock).Titled("UnitsInStock").SetCrudHidden(true, false, true, false);
             c.Add(o => o.Description).Titled("Description");
         };
 
