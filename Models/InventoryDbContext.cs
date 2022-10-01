@@ -143,6 +143,8 @@ namespace dotnet_inventory_example.Models
                 entity.HasKey(e => new { e.WorkOrderId, e.ProductId })
                     .HasName("WorkOrderProducts_PK");
 
+                entity.ToTable("WorkOrderProduct");
+
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.WorkOrderProducts)
                     .HasForeignKey(d => d.ProductId)
